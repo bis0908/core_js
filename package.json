@@ -1,0 +1,15 @@
+{
+  "name": "core_js",
+  "version": "1.0.0",
+  "description": "core javascript",
+  "license": "ISC",
+  "author": "albert kong",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.3"
+  }
+}
