@@ -1,16 +1,16 @@
 /**
  * @fileoverview 3-2-3 call / apply 메서드의 활용
- * 
+ *
  * @description
  * call과 apply 메서드의 실무 활용 사례들을 종합적으로 학습합니다.
  * 유사배열객체, 생성자 호출, 내장 메서드 활용 등 다양한 패턴을 익힙니다.
- * 
+ *
  * @objectives
  * - 유사배열객체에 배열 메서드 적용하기
  * - 생성자 함수 간 상속 구현하기
  * - 여러 인수를 묶어 하나의 배열로 전달하기
  * - 실무에서 자주 사용되는 패턴들 마스터하기
- * 
+ *
  * @concept
  * call과 apply를 활용하면 내장 메서드를 다른 객체에 적용하여 강력한 기능 구현 가능
  */
@@ -33,7 +33,7 @@ console.log("🔧 활용 사례 1: 유사배열객체에 배열 메서드 적용
 // 유사배열객체 생성
 var arrayLikeObj = {
   0: "a",
-  1: "b", 
+  1: "b",
   2: "c",
   length: 3,
 };
@@ -64,14 +64,14 @@ function testArguments() {
   console.log("arguments 타입:", typeof arguments);
   console.log("arguments.length:", arguments.length);
   console.log("Array.isArray(arguments):", Array.isArray(arguments));
-  
+
   // 배열로 변환
   var argv = Array.prototype.slice.call(arguments);
   console.log("변환된 배열:", argv);
   console.log("Array.isArray(argv):", Array.isArray(argv));
-  
+
   // 배열 메서드 사용 가능
-  argv.forEach(function(arg, index) {
+  argv.forEach((arg, index) => {
     console.log("  인수 " + index + ":", arg);
   });
 }
@@ -94,7 +94,7 @@ console.log("\n🏗️  활용 사례 2: 생성자 내부에서 다른 생성자
 function Person(name, gender) {
   this.name = name;
   this.gender = gender;
-  this.introduce = function() {
+  this.introduce = function () {
     return "안녕하세요, " + this.name + "입니다.";
   };
 }
@@ -103,16 +103,16 @@ function Person(name, gender) {
 function Student(name, gender, school) {
   Person.call(this, name, gender); // Person 생성자 호출
   this.school = school;
-  this.study = function(subject) {
+  this.study = function (subject) {
     return this.name + "이(가) " + subject + "을(를) 공부합니다.";
   };
 }
 
-// Person을 상속하는 Employee  
+// Person을 상속하는 Employee
 function Employee(name, gender, company) {
   Person.call(this, name, gender); // Person 생성자 호출
   this.company = company;
-  this.work = function(task) {
+  this.work = function (task) {
     return this.name + "이(가) " + task + "을(를) 작업합니다.";
   };
 }
@@ -125,7 +125,7 @@ console.log("학생:", student);
 console.log("학생 소개:", student.introduce());
 console.log("학생 공부:", student.study("자바스크립트"));
 
-console.log("직장인:", employee);  
+console.log("직장인:", employee);
 console.log("직장인 소개:", employee.introduce());
 console.log("직장인 업무:", employee.work("프로젝트"));
 
@@ -144,10 +144,11 @@ console.log("숫자들:", numbers);
 console.log("최대값:", Math.max.apply(null, numbers));
 console.log("최소값:", Math.min.apply(null, numbers));
 
-console.log("소수들:", decimals);  
-console.log("Math.floor 적용:", decimals.map(function(num) {
-  return Math.floor(num);
-}));
+console.log("소수들:", decimals);
+console.log(
+  "Math.floor 적용:",
+  decimals.map((num) => Math.floor(num)),
+);
 
 // 배열 합치기에 apply 활용
 console.log("\n6️⃣ 배열 합치기:");
@@ -173,53 +174,55 @@ console.log("\n🚀 고급 활용 사례들\n");
 // 함수형 프로그래밍 패턴
 console.log("7️⃣ 함수형 프로그래밍 패턴:");
 var mapper = {
-  transform: function(array, transformFn) {
-    return Array.prototype.map.call(array, transformFn);
-  },
-  filter: function(array, predicateFn) {
-    return Array.prototype.filter.call(array, predicateFn);
-  },
-  reduce: function(array, reducerFn, initial) {
-    return Array.prototype.reduce.call(array, reducerFn, initial);
-  }
+  transform: (array, transformFn) =>
+    Array.prototype.map.call(array, transformFn),
+  filter: (array, predicateFn) =>
+    Array.prototype.filter.call(array, predicateFn),
+  reduce: (array, reducerFn, initial) =>
+    Array.prototype.reduce.call(array, reducerFn, initial),
 };
 
 var testArray = [1, 2, 3, 4, 5];
 console.log("원본 배열:", testArray);
-console.log("제곱:", mapper.transform(testArray, function(x) { return x * x; }));
-console.log("짝수만:", mapper.filter(testArray, function(x) { return x % 2 === 0; }));
-console.log("합계:", mapper.reduce(testArray, function(sum, x) { return sum + x; }, 0));
+console.log(
+  "제곱:",
+  mapper.transform(testArray, (x) => x * x),
+);
+console.log(
+  "짝수만:",
+  mapper.filter(testArray, (x) => x % 2 === 0),
+);
+console.log(
+  "합계:",
+  mapper.reduce(testArray, (sum, x) => sum + x, 0),
+);
 
 // 메서드 체이닝 구현
 console.log("\n8️⃣ 메서드 체이닝 구현:");
-var StringProcessor = function(str) {
+var StringProcessor = function (str) {
   this.value = str;
 };
 
-StringProcessor.prototype.upper = function() {
+StringProcessor.prototype.upper = function () {
   this.value = this.value.toUpperCase();
   return this;
 };
 
-StringProcessor.prototype.reverse = function() {
-  this.value = this.value.split('').reverse().join('');
+StringProcessor.prototype.reverse = function () {
+  this.value = this.value.split("").reverse().join("");
   return this;
 };
 
-StringProcessor.prototype.repeat = function(times) {
+StringProcessor.prototype.repeat = function (times) {
   this.value = Array(times + 1).join(this.value);
   return this;
 };
 
-StringProcessor.prototype.get = function() {
+StringProcessor.prototype.get = function () {
   return this.value;
 };
 
-var result = new StringProcessor("hello")
-  .upper()
-  .reverse()
-  .repeat(2)
-  .get();
+var result = new StringProcessor("hello").upper().reverse().repeat(2).get();
 
 console.log("체이닝 결과:", result);
 

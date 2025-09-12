@@ -238,12 +238,26 @@ DataProcessorClass.prototype.processWithSelf = function() {
   });
 };
 
+/**
+ * @method arrow 패턴으로 해결한 메서드
+ */
+DataProcessorClass.prototype.processWithArrow = function() {
+  console.log("arrow 패턴 시작:", this.name);
+  var self = this; // this를 self 변수에 저장
+  this.data.forEach((item) => {
+    console.log("arrow 패턴 - self.name:", self.name, "item:", item);
+  });
+};
+
+
+
 // 실제 동작 확인
 var classLikeProcessor = new DataProcessorClass("클래스처리기");
 console.log("--- 문제 상황 ---");
 classLikeProcessor.processWithProblem();
 console.log("--- 해결 상황 ---");
 classLikeProcessor.processWithSelf();
+classLikeProcessor.processWithArrow();
 
 /**
  * @note 브라우저 환경의 이벤트 핸들러

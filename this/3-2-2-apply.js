@@ -1,15 +1,15 @@
 /**
  * @fileoverview 3-2-2 apply 메서드
- * 
+ *
  * @description
  * Function.prototype.apply를 사용하여 this를 명시적으로 바인딩하는 방법을 학습합니다.
  * apply와 call의 차이점과 배열 인수 처리 방식을 이해합니다.
- * 
+ *
  * @objectives
  * - apply 메서드의 기본 문법과 동작 원리
  * - call과 apply의 차이점 명확히 구분
  * - 배열 인수를 다루는 상황에서의 apply 활용
- * 
+ *
  * @concept
  * apply는 call과 동일하지만 인수를 배열 형태로 전달하는 것이 차이점
  */
@@ -37,7 +37,7 @@ var funcForApply = function (a, b, c) {
 var testObj = { x: 1 };
 
 console.log("1️⃣ call 사용 (개별 인수):");
-funcForApply.call(testObj, 4, 5, 6); 
+funcForApply.call(testObj, 4, 5, 6);
 
 console.log("\n2️⃣ apply 사용 (배열 인수):");
 funcForApply.apply(testObj, [4, 5, 6]); // 결과는 동일, 인수 전달 방식만 다름
@@ -53,9 +53,9 @@ var objForApply = {
   },
 };
 
-var anotherObj = { 
-  a: 4, 
-  name: "다른객체" 
+var anotherObj = {
+  a: 4,
+  name: "다른객체",
 };
 
 console.log("3️⃣ 원래 메서드 호출:");
@@ -114,12 +114,12 @@ console.log("\n⚙️  함수 인수 처리에서 apply 활용:");
 function processArgs(operation) {
   // arguments는 첫 번째 인수 제외하고 나머지를 배열로 변환
   var args = Array.prototype.slice.call(arguments, 1);
-  
+
   console.log("작업:", operation);
   console.log("인수들:", args);
-  
+
   if (operation === "sum") {
-    return args.reduce(function(sum, num) { return sum + num; }, 0);
+    return args.reduce((sum, num) => sum + num, 0);
   } else if (operation === "max") {
     return Math.max.apply(null, args);
   } else if (operation === "min") {
@@ -135,21 +135,17 @@ console.log("최소값:", processArgs("min", 15, 8, 23, 4, 19));
 // apply를 활용한 데코레이터 패턴
 console.log("\n🎨 apply를 활용한 데코레이터 패턴:");
 var logger = {
-  log: function(func, args) {
+  log: function (func, args) {
     console.log("함수 실행 전 - 함수명:", func.name, "인수:", args);
     var result = func.apply(this, args);
     console.log("함수 실행 후 - 결과:", result);
     return result;
-  }
+  },
 };
 
 var calculator = {
-  multiply: function(a, b) {
-    return a * b;
-  },
-  divide: function(a, b) {
-    return a / b;
-  }
+  multiply: (a, b) => a * b,
+  divide: (a, b) => a / b,
 };
 
 console.log("9️⃣ 로깅 데코레이터:");

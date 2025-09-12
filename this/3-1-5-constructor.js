@@ -28,7 +28,7 @@ var Cat = function (name, age) {
   // 메서드 추가
   this.introduce = function () {
     console.log(
-      this.sound + "! 제 이름은 " + this.name + "이고, " + this.age + "살입니다."
+      `${this.sound}! 제 이름은 ${this.name}이고, ${this.age}살입니다.`,
     );
   };
 };
@@ -65,6 +65,7 @@ console.log("전역에 추가된 프로퍼티들:");
 console.log("global.sound:", global.sound); // "야옹" (전역에 추가됨!)
 console.log("global.name:", global.name); // "오류"
 console.log("global.age:", global.age); // 1
+console.log("=========================================");
 
 // 전역 오염 정리
 delete global.sound;
@@ -131,13 +132,11 @@ var Person = function (name, age) {
 
   // 공개 메서드
   this.introduce = function () {
-    return "안녕하세요! " + this.name + "입니다. " + this.age + "살이에요.";
+    return `안녕하세요! ${this.name}입니다. ${this.age}살이에요.`;
   };
 
   // 비공개 정보에 접근하는 메서드 (클로저 활용)
-  this.getBirthYear = function() {
-    return birthYear;
-  };
+  this.getBirthYear = () => birthYear;
 };
 
 var person1 = new Person("김철수", 25);

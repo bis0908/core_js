@@ -59,7 +59,7 @@ objForCall.method.call(anotherObj, 5, 6); // this는 anotherObj
  * 하나의 함수를 여러 객체에서 재사용할 수 있는 강력한 패턴
  */
 var greet = function (greeting, punctuation) {
-  console.log(greeting + ", " + this.name + punctuation);
+  console.log(`${greeting}, ${this.name}${punctuation}`);
 };
 
 var person1 = { name: "김철수" };
@@ -76,17 +76,17 @@ greet.call(person3, "좋은 아침", ".");
  */
 var calculator = {
   add: function (a, b) {
-    console.log(this.name + "에서 계산:", a + "+" + b + "=", a + b);
+    console.log(`${this.name}에서 계산:`, `${a}+${b}=`, a + b);
     return a + b;
   },
   multiply: function (a, b) {
-    console.log(this.name + "에서 계산:", a + "×" + b + "=", a * b);
+    console.log(`${this.name}에서 계산:`, `${a}×${b}=`, a * b);
     return a * b;
   },
 };
 
-var mathProcessor = { name: "수학처리기" };
-var simpleCalc = { name: "간단계산기" };
+var mathProcessor = { name: "더하기" };
+var simpleCalc = { name: "곱하기" };
 
 calculator.add.call(mathProcessor, 10, 20);
 calculator.multiply.call(simpleCalc, 3, 7);
@@ -102,8 +102,8 @@ calculator.multiply.call(simpleCalc, 3, 7);
 function Animal(name, sound) {
   this.name = name;
   this.sound = sound;
-  this.speak = function () {
-    console.log(this.name + ": " + this.sound);
+  this.bark = function () {
+    console.log(`${this.name}: ${this.sound}`);
   };
 }
 
@@ -116,12 +116,12 @@ function Dog(name, breed) {
   Animal.call(this, name, "멍멍");
   this.breed = breed;
   this.getInfo = function () {
-    console.log("이름: " + this.name + ", 품종: " + this.breed + ", 소리: " + this.sound);
+    console.log(`이름: ${this.name}, 품종: ${this.breed}, 소리: ${this.sound}`);
   };
 }
 
 var myDog = new Dog("바둑이", "진돗개");
-myDog.speak();
+myDog.bark();
 myDog.getInfo();
 
 /**
@@ -129,25 +129,35 @@ myDog.getInfo();
  * 여러 메서드를 순차적으로 호출하면서 this를 유지하는 패턴
  */
 var processor = {
-  step1: function(data) {
-    console.log("1단계 처리:", data);
-    return data + "-step1";
+  step1: function (data) {
+    console.log(`${this.name}에서 1단계 처리:`, data);
+    this.processedCount = (this.processedCount || 0) + 1;
+    return `${data}-step1`;
   },
-  step2: function(data) {
-    console.log("2단계 처리:", data);
-    return data + "-step2";
+  step2: function (data) {
+    console.log(`${this.name}에서 2단계 처리:`, data);
+    this.processedCount = (this.processedCount || 0) + 1;
+    return `${data}-step2`;
   },
-  step3: function(data) {
-    console.log("3단계 처리:", data);
-    return data + "-step3";
+  step3: function (data) {
+    console.log(`${this.name}에서 3단계 처리:`, data);
+    this.processedCount = (this.processedCount || 0) + 1;
+    console.log("총 처리 횟수:", this.processedCount);
+    return `${data}-step3`;
   },
 };
 
-var context = { name: "처리기" };
+var context = {
+  name: "데이터처리기",
+  processedCount: 0,
+};
+
+// call을 사용하여 각 단계마다 context를 this로 설정
 var result1 = processor.step1.call(context, "초기데이터");
 var result2 = processor.step2.call(context, result1);
 var result3 = processor.step3.call(context, result2);
 console.log("최종 결과:", result3);
+console.log("컨텍스트 상태:", context);
 
 /**
  * @summary 핵심 포인트

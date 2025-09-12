@@ -67,7 +67,7 @@ var objForCallback = {
 };
 [1, 2, 3].forEach(function (value, index) {
   this.count += value * this.multiplier;
-  console.log("  " + this.name + " 처리중 - value:", value, "누적:", this.count);
+  console.log(`  ${this.name} 처리중 - value:`, value, "누적:", this.count);
 }, objForCallback); // thisArg로 objForCallback 전달
 
 /**
@@ -80,7 +80,7 @@ var processor = {
 };
 
 var result = ["사과", "바나나", "오렌지"].map(function (item) {
-  return this.prefix + " " + item + this.suffix;
+  return `${this.prefix} ${item}${this.suffix}`;
 }, processor);
 
 console.log("map 결과:", result);
@@ -134,10 +134,9 @@ var dataManager = {
    */
   processBySelf: function () {
     console.log("\n방법 1: self 패턴");
-    var self = this; // this를 self 변수에 저장
 
-    this.data.forEach(function(item) {
-      console.log("  " + self.name + "이 처리:", item); // self 변수 사용
+    this.data.forEach((item) => {
+      console.log(`  ${this.name}이 처리: `, item); // self 변수 사용
     });
   },
 
@@ -149,7 +148,7 @@ var dataManager = {
     console.log("\n방법 1-1: 화살표 함수 (ES6 참고용)");
 
     this.data.forEach((item) => {
-      console.log("  " + this.name + "이 처리:", item); // 상위 스코프의 this 자동 바인딩
+      console.log(`  ${this.name}이 처리: `, item); // 상위 스코프의 this 자동 바인딩
     });
   },
 
@@ -160,7 +159,7 @@ var dataManager = {
   processByThisArg: function () {
     console.log("\n방법 2: thisArg 활용");
     this.data.forEach(function (item) {
-      console.log("  " + this.name + "이 처리:", item);
+      console.log(`  ${this.name}이 처리:`, item);
     }, this); // thisArg로 this 전달
   },
 
@@ -172,7 +171,7 @@ var dataManager = {
     console.log("\n방법 3: bind 사용 (미리보기)");
     this.data.forEach(
       function (item) {
-        console.log("  " + this.name + "이 처리:", item);
+        console.log(`  ${this.name}이 처리:`, item);
       }.bind(this),
     ); // bind로 this 고정
   },
@@ -193,7 +192,7 @@ dataManager.processByBind();
  *
  * @solutions 콜백에서 상위 this 접근 방법
  * 1. self 패턴: var self = this (ES5 호환, 가장 일반적)
- * 2. 화살표 함수: () => {} (ES6, lexical this 바인딩)  
+ * 2. 화살표 함수: () => {} (ES6, lexical this 바인딩)
  * 3. thisArg 활용: method(callback, thisArg) (배열 메서드 지원)
  * 4. bind 사용: callback.bind(this) (명시적 바인딩)
  */
