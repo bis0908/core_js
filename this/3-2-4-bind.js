@@ -1,20 +1,19 @@
 /**
  * @fileoverview 3-2-4 bind 메서드
- * 
+ *
  * @description
  * Function.prototype.bind를 사용하여 this를 미리 바인딩하는 방법을 학습합니다.
  * bind와 call/apply의 차이점과 다양한 활용 패턴을 이해합니다.
- * 
+ *
  * @objectives
  * - bind 메서드의 동작 원리와 call/apply와의 차이점
  * - 부분 적용 함수(Partial Application) 구현
  * - 이벤트 핸들러와 콜백에서의 bind 활용
  * - bind된 함수의 특성과 name 프로퍼티
- * 
+ *
  * @concept
  * bind는 this를 미리 고정한 새로운 함수를 반환하며 즉시 실행되지 않음
  */
-
 
 // bind 메서드 기본 문법
 /**
@@ -60,8 +59,8 @@ bindFunc2(30, 40); // c=30, d=40
  * bind된 함수명: bound funcForBind
  */
 console.log("원본 함수명:", funcForBind.name); // funcForBind
-console.log("bind된 함수명:", bindFunc1.name);  // bound funcForBind
-console.log("bind된 함수명:", bindFunc2.name);  // bound funcForBind
+console.log("bind된 함수명:", bindFunc1.name); // bound funcForBind
+console.log("bind된 함수명:", bindFunc2.name); // bound funcForBind
 
 /**
  * @section 내부함수에서 bind 사용
@@ -71,7 +70,7 @@ var objForBind = {
   value: 42,
   outer: function () {
     console.log("outer의 this.name:", this.name);
-    
+
     // 방법 1: call 사용
     var innerFunc1 = function () {
       console.log("innerFunc1의 this.name:", this.name);
@@ -98,27 +97,32 @@ var callbackObject = {
   name: "콜백처리기",
   data: [1, 2, 3, 4, 5],
   multiplier: 10,
-  
+
   /**
    * @method processWithProblem - 문제가 있는 방법
    * @example 6️⃣ 문제가 있는 콜백
    */
-  processWithProblem: function() {
-    this.data.forEach(function(item) {
+  processWithProblem: function () {
+    this.data.forEach(function (item) {
       // this가 전역객체를 가리킴!
       console.log("처리 실패 - this.name:", this.name, "item:", item);
     });
   },
-  
+
   /**
    * @method processWithBind - bind로 해결
    * @example 7️⃣ bind로 해결된 콜백
    */
-  processWithBind: function() {
-    this.data.forEach(function(item) {
-      console.log("처리 성공 - " + this.name + "이 처리:", item * this.multiplier);
-    }.bind(this));
-  }
+  processWithBind: function () {
+    this.data.forEach(
+      function (item) {
+        console.log(
+          "처리 성공 - " + this.name + "이(가) 처리:",
+          item * this.multiplier,
+        );
+      }.bind(this),
+    );
+  },
 };
 
 // callbackObject.processWithProblem(); // this 문제 발생
@@ -130,15 +134,18 @@ callbackObject.processWithBind(); // bind로 해결
 var timerObject = {
   name: "타이머객체",
   message: "시간이 지났습니다!",
-  
-  startTimer: function(delay) {
+
+  startTimer: function (delay) {
     console.log(this.name + " 타이머 시작...");
-    
+
     // bind 없이 사용하면 this가 전역객체
-    setTimeout(function() {
-      console.log("타이머 완료 - " + this.name + ": " + this.message);
-    }.bind(this), delay);
-  }
+    setTimeout(
+      function () {
+        console.log("타이머 완료 - " + this.name + ": " + this.message);
+      }.bind(this),
+      delay,
+    );
+  },
 };
 
 /** @example 8️⃣ setTimeout bind 예제 */
@@ -150,12 +157,12 @@ timerObject.startTimer(500);
 var buttonHandler = {
   name: "버튼핸들러",
   clickCount: 0,
-  
-  handleClick: function(event) {
+
+  handleClick: function (event) {
     this.clickCount++;
     console.log(this.name + " 클릭됨! 총 " + this.clickCount + "회");
   },
-  
+
   /**
    * 브라우저에서 사용할 때:
    * element.addEventListener('click', this.handleClick.bind(this));
@@ -172,8 +179,17 @@ console.log("\n🔗 bind 체이닝:");
 var chainObj1 = { name: "첫번째", value: 10 };
 var chainObj2 = { name: "두번째", value: 20 };
 
-var chainFunc = function(a, b) {
-  console.log("this.name:", this.name, "this.value:", this.value, "a:", a, "b:", b);
+var chainFunc = function (a, b) {
+  console.log(
+    "this.name:",
+    this.name,
+    "this.value:",
+    this.value,
+    "a:",
+    a,
+    "b:",
+    b,
+  );
 };
 
 console.log("9️⃣ bind 체이닝 예제:");
@@ -187,14 +203,14 @@ boundTwice(2); // 여전히 chainObj1에 바인딩됨 (중요!)
 console.log("\n💼 실무 활용: 메서드 추출:");
 var calculator = {
   name: "계산기",
-  add: function(a, b) {
+  add: function (a, b) {
     console.log(this.name + "에서 계산: " + a + " + " + b + " = " + (a + b));
     return a + b;
   },
-  multiply: function(a, b) {
-    console.log(this.name + "에서 계산: " + a + " × " + b + " = " + (a * b));
+  multiply: function (a, b) {
+    console.log(this.name + "에서 계산: " + a + " × " + b + " = " + a * b);
     return a * b;
-  }
+  },
 };
 
 console.log("🔟 메서드 추출과 bind:");
@@ -209,7 +225,7 @@ boundAdd(5, 3); // 정상 동작
 // 배열의 함수들에 bind 적용
 var operations = [
   calculator.add.bind(calculator),
-  calculator.multiply.bind(calculator)
+  calculator.multiply.bind(calculator),
 ];
 
 console.log("배열에서 바인딩된 메서드 사용:");
