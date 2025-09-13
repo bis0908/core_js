@@ -24,23 +24,24 @@
  */
 
 /**
- * @section bind vs call/apply 비교
+ * @section bind vs call/apply 비교 (문서 3-25 기반)
  */
-var funcForBind = function (a, b, c, d) {
-  console.log("this:", this, "a:", a, "b:", b, "c:", c, "d:", d);
+var func = function (a, b, c) {
+  console.log(this, a, b, c);
 };
 
-var testObj = { x: 1, name: "테스트객체" };
+/** @example 3-25 ⭐ 기본 bind 메서드 사용법 */
+func(1, 2, 3); // Window{ ... } 1 2 3
+func.call({ x: 1 }, 4, 5, 6); // { x: 1 } 4 5 6
 
-/** @example 1️⃣ 일반 함수 호출 */
-funcForBind(1, 2, 3, 4); // this는 전역객체
+// bind는 새로운 함수를 반환 (즉시 실행되지 않음)
+var bindFunc1 = func.bind({ x: 1 });
+bindFunc1(5, 6, 7, 8); // { x: 1 } 5 6 7 8
 
-/** @example 2️⃣ call 사용 (즉시 실행) */
-funcForBind.call(testObj, 1, 2, 3, 4);
-
-/** @example 3️⃣ bind 사용 (새 함수 반환) */
-var bindFunc = funcForBind.bind(testObj);
-bindFunc(1, 2, 3, 4); // 나중에 실행
+// 부분 적용 함수 만들기
+var bindFunc2 = func.bind({ x: 1 }, 4, 5);
+bindFunc2(6, 7); // { x: 1 } 4 5 6 7
+bindFunc2(8, 9); // { x: 1 } 4 5 8 9
 
 /**
  * @section bind의 부분 적용(Partial Application) 기능
@@ -54,41 +55,37 @@ var bindFunc2 = funcForBind.bind(testObj, 10, 20); // a=10, b=20으로 고정
 bindFunc2(30, 40); // c=30, d=40
 
 /**
- * @section bind된 함수의 name 프로퍼티
- * 원본 함수명: funcForBind
- * bind된 함수명: bound funcForBind
+ * @section bind된 함수의 name 프로퍼티 (문서 3-26 기반)
  */
-console.log("원본 함수명:", funcForBind.name); // funcForBind
-console.log("bind된 함수명:", bindFunc1.name); // bound funcForBind
-console.log("bind된 함수명:", bindFunc2.name); // bound funcForBind
+/** @example 3-26 ⭐ bind된 함수의 name 프로퍼티 */
+console.log("원본 함수명:", func.name); // func
+console.log("bind된 함수명:", bindFunc1.name); // bound func
 
 /**
- * @section 내부함수에서 bind 사용
+ * @section 내부함수에서 bind 사용 (문서 3-27 기반)
  */
-var objForBind = {
-  name: "외부객체",
-  value: 42,
+/** @example 3-27 ⭐ call 방식과 bind 방식 비교 */
+var obj = {
   outer: function () {
-    console.log("outer의 this.name:", this.name);
-
-    // 방법 1: call 사용
-    var innerFunc1 = function () {
-      console.log("innerFunc1의 this.name:", this.name);
-      console.log("innerFunc1의 this.value:", this.value);
+    console.log(this);
+    var innerFunc = function () {
+      console.log(this);
     };
-    innerFunc1.call(this);
-
-    // 방법 2: bind 사용 (더 깔끔)
-    var innerFunc2 = function () {
-      console.log("innerFunc2의 this.name:", this.name);
-      console.log("innerFunc2의 this.value:", this.value);
-    }.bind(this);
-    innerFunc2();
+    innerFunc.call(this);
   },
 };
+obj.outer();
 
-/** @example 5️⃣ 내부함수 this 바인딩 */
-objForBind.outer();
+var objWithBind = {
+  outer: function () {
+    console.log(this);
+    var innerFunc = function () {
+      console.log(this);
+    }.bind(this);
+    innerFunc();
+  },
+};
+objWithBind.outer();
 
 /**
  * @section 콜백 함수에서 bind 사용
@@ -129,27 +126,22 @@ var callbackObject = {
 callbackObject.processWithBind(); // bind로 해결
 
 /**
- * @section setTimeout에서 bind 사용
+ * @section setTimeout에서 bind 사용 (문서 3-28 기반)
  */
-var timerObject = {
-  name: "타이머객체",
-  message: "시간이 지났습니다!",
-
-  startTimer: function (delay) {
-    console.log(this.name + " 타이머 시작...");
-
-    // bind 없이 사용하면 this가 전역객체
-    setTimeout(
-      function () {
-        console.log("타이머 완료 - " + this.name + ": " + this.message);
-      }.bind(this),
-      delay,
-    );
+/** @example 3-28 ⭐ setTimeout에서 this 바인딩 비교 */
+var timerObj = {
+  logThis: function () {
+    console.log(this);
+  },
+  logThisLater1: function () {
+    setTimeout(this.logThis, 500);
+  },
+  logThisLater2: function () {
+    setTimeout(this.logThis.bind(this), 1000);
   },
 };
-
-/** @example 8️⃣ setTimeout bind 예제 */
-timerObject.startTimer(500);
+timerObj.logThisLater1(); // Window { ... }
+timerObj.logThisLater2(); // obj { logThis: f, ... }
 
 /**
  * @section 이벤트 핸들러 bind (브라우저 환경 시뮬레이션)
@@ -173,6 +165,21 @@ var buttonHandler = {
  * @example 브라우저에서 이벤트 핸들러 bind 사용법
  * element.addEventListener('click', handler.handleClick.bind(handler));
  */
+
+/**
+ * @section 화살표 함수와 bind 비교 (문서 3-29 참고)
+ */
+/** @example 3-29 ⭐ 화살표 함수는 bind가 필요 없음 */
+var objWithArrow = {
+  outer: function () {
+    console.log(this); // (1) { outer: f }
+    var innerFunc = () => {
+      console.log(this); // (2) { outer: f }
+    };
+    innerFunc();
+  },
+};
+objWithArrow.outer();
 
 // bind 체이닝
 console.log("\n🔗 bind 체이닝:");
