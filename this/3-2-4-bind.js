@@ -47,12 +47,18 @@ bindFunc2(8, 9); // { x: 1 } 4 5 8 9
  * @section bind의 부분 적용(Partial Application) 기능
  */
 
-/** @example 4️⃣ 부분 적용 예제 */
-var bindFunc1 = funcForBind.bind(testObj, 10); // a를 10으로 고정
-bindFunc1(20, 30, 40); // b=20, c=30, d=40
+/** @example 4️⃣ 부분 적용 예제 (추가 학습용) */
+var detailedFunc = function (a, b, c, d) {
+  console.log("this:", this, "a:", a, "b:", b, "c:", c, "d:", d);
+};
 
-var bindFunc2 = funcForBind.bind(testObj, 10, 20); // a=10, b=20으로 고정
-bindFunc2(30, 40); // c=30, d=40
+var testObj = { x: 1, name: "테스트객체" };
+
+var bindFunc3 = detailedFunc.bind(testObj, 10); // a를 10으로 고정
+bindFunc3(20, 30, 40); // b=20, c=30, d=40
+
+var bindFunc4 = detailedFunc.bind(testObj, 10, 20); // a=10, b=20으로 고정
+bindFunc4(30, 40); // c=30, d=40
 
 /**
  * @section bind된 함수의 name 프로퍼티 (문서 3-26 기반)
@@ -60,6 +66,8 @@ bindFunc2(30, 40); // c=30, d=40
 /** @example 3-26 ⭐ bind된 함수의 name 프로퍼티 */
 console.log("원본 함수명:", func.name); // func
 console.log("bind된 함수명:", bindFunc1.name); // bound func
+console.log("상세함수명:", detailedFunc.name); // detailedFunc
+console.log("부분적용함수명:", bindFunc3.name); // bound detailedFunc
 
 /**
  * @section 내부함수에서 bind 사용 (문서 3-27 기반)
