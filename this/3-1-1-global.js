@@ -1,15 +1,15 @@
 /**
  * @fileoverview 3-1-1 전역 공간에서의 this
- * 
+ *
  * @description
  * 전역 공간에서 this는 전역 객체를 가리킵니다.
  * Node.js와 브라우저 환경에서의 차이점을 학습합니다.
- * 
+ *
  * @objectives
  * - 전역 공간에서 this가 가리키는 객체 이해
- * - Node.js와 브라우저 환경의 this 차이점 파악  
+ * - Node.js와 브라우저 환경의 this 차이점 파악
  * - 전역변수와 전역객체 프로퍼티의 관계 이해
- * 
+ *
  * @environment
  * - Node.js: 전역 this는 module.exports 객체
  * - Browser: 전역 this는 window 객체
@@ -41,7 +41,7 @@ if (typeof global !== "undefined") {
   console.log("전역객체의 globalB:", global.globalB);
   console.log("global과 this는 다름:", global === this);
 } else {
-  // 브라우저 환경  
+  // 브라우저 환경
   window.globalB = 2;
   console.log("전역객체의 globalB:", window.globalB);
   console.log("window와 this는 동일:", window === this);
@@ -60,7 +60,7 @@ console.log("var로 선언된 globalA:", globalA); // 여전히 존재
 
 /**
  * 환경별 this 비교 요약
- * 
+ *
  * | 항목        | Node.js        | Browser         |
  * |-------------|----------------|----------------|
  * | 전역 this   | module.exports | window         |
@@ -71,18 +71,18 @@ console.log("var로 선언된 globalA:", globalA); // 여전히 존재
 
 /**
  * @summary 핵심 포인트
- * 
+ *
  * - Node.js: 전역 this ≠ global 객체 (모듈 시스템)
- * - Browser: 전역 this === window 객체  
+ * - Browser: 전역 this === window 객체
  * - var 선언 변수는 환경에 따라 다르게 처리됨
  * - delete 연산자는 직접 할당한 프로퍼티만 삭제 가능
- * 
+ *
  * @example
  * // Node.js
  * this !== global
  * var a = 1; // 모듈 스코프
- * 
- * // Browser  
+ *
+ * // Browser
  * this === window
  * var a = 1; // window.a = 1
  */
