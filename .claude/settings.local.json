@@ -4,7 +4,9 @@
       "Bash(npx biome:*)",
       "Bash(node:*)",
       "mcp__smithery-ai-server-sequential-thinking__sequentialthinking",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
