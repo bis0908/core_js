@@ -44,12 +44,12 @@ var UserProfile = {
   updatePreferencesWithBind: function (newPrefs, callback) {
     var updateTask = function () {
       for (var key in newPrefs) {
-        if (this.preferences.hasOwnProperty(key)) {
+        if (Object.hasOwn(this.preferences, key)) {
           this.preferences[key] = newPrefs[key];
         }
       }
 
-      console.log(this.username + "의 설정이 업데이트되었습니다.");
+      console.log(`${this.username}의 설정이 업데이트되었습니다.`);
       callback.call(this, this.preferences);
     }.bind(this); // bind로 this 고정
 
@@ -58,17 +58,23 @@ var UserProfile = {
 
   onPreferencesUpdated: function (preferences) {
     console.log("업데이트된 설정:");
-    console.log("- 테마: " + preferences.theme);
-    console.log("- 언어: " + preferences.language);
-    console.log("사용자: " + this.username); // this가 UserProfile을 가리킴
+    console.log(`- 테마: ${preferences.theme}`);
+    console.log(`- 언어: ${preferences.language}`);
+    console.log(`사용자: ${this.username}`); // this가 UserProfile을 가리킴
   },
 };
 
 // 사용 예시
 var newSettings = { theme: "light", language: "en" };
 
-// UserProfile.updatePreferencesOldWay(newSettings, UserProfile.onPreferencesUpdated);
-// UserProfile.updatePreferencesWithBind(newSettings, UserProfile.onPreferencesUpdated);
+// UserProfile.updatePreferencesOldWay(
+//   newSettings,
+//   UserProfile.onPreferencesUpdated,
+// );
+// UserProfile.updatePreferencesWithBind(
+//   newSettings,
+//   UserProfile.onPreferencesUpdated,
+// );
 
 /**
  * 예제 2: 쇼핑카트 시스템
@@ -318,9 +324,9 @@ var TaskManager = {
       return result;
     }.bind(this);
 
-    this.tasks.forEach(function (task, index) {
+    this.tasks.forEach((task, index) => {
       setTimeout(
-        function () {
+        () => {
           boundProcessor(task, index);
         },
         (index + 1) * 300,
@@ -380,15 +386,15 @@ var ApiClient = {
   },
 
   onRequestSuccess: function (data, requestId) {
-    console.log("✅ [" + this.baseUrl + "] 요청 #" + requestId + " 성공");
-    console.log("   데이터: " + data.data);
-    console.log("   총 요청 수: " + this.requestCount);
+    console.log(`✅ [${this.baseUrl}] 요청 #${requestId} 성공`);
+    console.log(`   데이터: ${data.data}`);
+    console.log(`   총 요청 수: ${this.requestCount}`);
   },
 
   onRequestError: function (error, requestId) {
-    console.log("❌ [" + this.baseUrl + "] 요청 #" + requestId + " 실패");
-    console.log("   오류: " + error.message);
-    console.log("   총 요청 수: " + this.requestCount);
+    console.log(`❌ [${this.baseUrl}] 요청 #${requestId} 실패`);
+    console.log(`   오류: ${error.message}`);
+    console.log(`   총 요청 수: ${this.requestCount}`);
   },
 };
 

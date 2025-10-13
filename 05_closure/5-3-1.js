@@ -13,13 +13,11 @@ console.log("=== 5-3-1. 콜백 함수에서 외부 데이터 사용 ===");
 var fruits = ["apple", "banana", "peach"];
 var $ul = document.createElement("ul");
 
-var alertFruitBuilder = function(fruit) {
-  return function() {
-    alert("your choice is " + fruit);
-  };
+var alertFruitBuilder = (fruit) => () => {
+  alert(`your choice is ${fruit}`);
 };
 
-fruits.forEach(function(fruit) {
+fruits.forEach((fruit) => {
   var $li = document.createElement("li");
   $li.innerText = fruit;
   $li.addEventListener("click", alertFruitBuilder(fruit));

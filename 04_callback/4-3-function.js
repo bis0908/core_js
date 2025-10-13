@@ -60,7 +60,7 @@ var authService = {
 };
 
 function handleLogin(username, password, successCallback, failureCallback) {
-  setTimeout(function () {
+  setTimeout(() => {
     var isValid = username === "admin" && password === "1234";
 
     if (isValid) {
@@ -81,7 +81,7 @@ function handleLogin(username, password, successCallback, failureCallback) {
  * 원본 객체의 메서드를 올바르게 호출하기 위해 익명 함수로 감쌉니다.
  */
 function safeHandleLogin(username, password, service) {
-  setTimeout(function () {
+  setTimeout(() => {
     var isValid = username === "admin" && password === "1234";
 
     if (isValid) {
@@ -118,11 +118,11 @@ var fileManager = {
     return { valid: true };
   },
 
-  onValidationSuccess: function (file) {
+  onValidationSuccess: (file) => {
     console.log("파일 검증 성공: " + file.name);
   },
 
-  onValidationError: function (error) {
+  onValidationError: (error) => {
     console.log("파일 검증 실패: " + error);
   },
 };
@@ -171,13 +171,11 @@ function processFileWithBind(file) {
 // 방법 3: 전용 wrapper 함수 생성
 function createFileProcessor(manager) {
   return {
-    validate: function (file) {
-      return manager.validateFile(file);
-    },
-    onSuccess: function (file) {
+    validate: (file) => manager.validateFile(file),
+    onSuccess: (file) => {
       manager.onValidationSuccess(file);
     },
-    onError: function (error) {
+    onError: (error) => {
       manager.onValidationError(error);
     },
   };

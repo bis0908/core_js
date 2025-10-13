@@ -10,11 +10,9 @@
 
 console.log("=== 5-1. 클로저의 기본 원리 ===");
 
-var outer = function() {
+var outer = () => {
   var a = 1;
-  var inner = function() {
-    return ++a;
-  };
+  var inner = () => ++a;
   return inner;
 };
 

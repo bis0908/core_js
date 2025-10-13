@@ -12,23 +12,23 @@
 
 console.log("=== 5-3-3. 부분 적용 함수 ===");
 
-Object.defineProperty(window, "_", {
+Object.defineProperty(globalThis, "_", {
   value: "EMPTY_SPACE",
   writable: false,
   configurable: false,
   enumerable: false,
 });
 
-var partial2 = function() {
+var partial2 = () => {
   var originalPartialArgs = arguments;
   var func = originalPartialArgs[0];
   if (typeof func !== "function") {
     throw new Error("첫 번째 인자가 함수가 아닙니다.");
   }
-  return function() {
+  return function () {
     var partialArgs = Array.prototype.slice.call(originalPartialArgs, 1);
     var restArgs = Array.prototype.slice.call(arguments);
-    for (var i = 0; i < partialArgs.length; i++) {
+    for (let i = 0; i < partialArgs.length; i++) {
       if (partialArgs[i] === _) {
         partialArgs[i] = restArgs.shift();
       }
@@ -37,9 +37,9 @@ var partial2 = function() {
   };
 };
 
-var add = function() {
+var add = () => {
   var result = 0;
-  for (var i = 0; i < arguments.length; i++) {
+  for (let i = 0; i < arguments.length; i++) {
     result += arguments[i];
   }
   return result;
@@ -52,7 +52,7 @@ console.log(addPartial(3, 6, 7, 10)); // 55
 
 var dog = {
   name: "강아지",
-  greet: partial2(function(prefix, suffix) {
+  greet: partial2(function (prefix, suffix) {
     return prefix + this.name + suffix;
   }, "왈왈, "),
 };

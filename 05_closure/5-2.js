@@ -10,11 +10,9 @@
 
 console.log("=== 5-2. 클로저의 메모리 관리 ===");
 
-var outer = (function() {
+var outer = (() => {
   var a = 1;
-  var inner = function() {
-    return ++a;
-  };
+  var inner = () => ++a;
   return inner;
 })();
 
@@ -25,3 +23,10 @@ console.log(outer()); // 3
 outer = null;
 
 console.log("=========================");
+
+const inner2 = (a, b) => {
+  console.log(a + b);
+};
+
+const a = new inner2();
+a(1, 2);

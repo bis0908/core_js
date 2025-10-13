@@ -15,14 +15,14 @@ function processUserRegistration(userData, callback) {
   console.log("1. 사용자 등록 처리 시작...");
 
   // 1단계: 이메일 중복 검사
-  checkEmailDuplicate(userData.email, function (emailResult) {
+  checkEmailDuplicate(userData.email, (emailResult) => {
     if (!emailResult.available) {
       callback({ success: false, error: "이미 존재하는 이메일입니다." });
       return;
     }
 
     // 2단계: 비밀번호 암호화
-    encryptPassword(userData.password, function (encryptResult) {
+    encryptPassword(userData.password, (encryptResult) => {
       if (!encryptResult.success) {
         callback({ success: false, error: "비밀번호 암호화 실패" });
         return;
@@ -35,14 +35,14 @@ function processUserRegistration(userData, callback) {
           password: encryptResult.encryptedPassword,
           name: userData.name,
         },
-        function (saveResult) {
+        (saveResult) => {
           if (!saveResult.success) {
             callback({ success: false, error: "데이터베이스 저장 실패" });
             return;
           }
 
           // 4단계: 환영 이메일 발송
-          sendWelcomeEmail(userData.email, function (emailResult) {
+          sendWelcomeEmail(userData.email, (emailResult) => {
             if (!emailResult.success) {
               callback({ success: false, error: "환영 이메일 발송 실패" });
               return;
@@ -63,14 +63,14 @@ function processUserRegistration(userData, callback) {
 
 // 각 단계별 비동기 함수들
 function checkEmailDuplicate(email, callback) {
-  setTimeout(function () {
+  setTimeout(() => {
     var isDuplicate = email === "taken@example.com";
     callback({ available: !isDuplicate });
   }, 500);
 }
 
 function encryptPassword(password, callback) {
-  setTimeout(function () {
+  setTimeout(() => {
     callback({
       success: true,
       encryptedPassword: "encrypted_" + password,
@@ -79,7 +79,7 @@ function encryptPassword(password, callback) {
 }
 
 function saveUserToDatabase(userData, callback) {
-  setTimeout(function () {
+  setTimeout(() => {
     callback({
       success: true,
       userId: Math.floor(Math.random() * 10000),
@@ -88,7 +88,7 @@ function saveUserToDatabase(userData, callback) {
 }
 
 function sendWelcomeEmail(email, callback) {
-  setTimeout(function () {
+  setTimeout(() => {
     console.log("환영 이메일을 " + email + "로 발송했습니다.");
     callback({ success: true });
   }, 400);
@@ -121,7 +121,7 @@ var newUser = {
 function processUserRegistrationImproved(userData, callback) {
   console.log("\n=== 개선된 회원가입 처리 ===");
 
-  checkEmailDuplicate(userData.email, function (emailResult) {
+  checkEmailDuplicate(userData.email, (emailResult) => {
     if (!emailResult.available) {
       return callback({ success: false, error: "이미 존재하는 이메일입니다." });
     }
@@ -130,7 +130,7 @@ function processUserRegistrationImproved(userData, callback) {
 }
 
 function handlePasswordEncryption(userData, callback) {
-  encryptPassword(userData.password, function (encryptResult) {
+  encryptPassword(userData.password, (encryptResult) => {
     if (!encryptResult.success) {
       return callback({ success: false, error: "비밀번호 암호화 실패" });
     }
@@ -146,7 +146,7 @@ function handlePasswordEncryption(userData, callback) {
 }
 
 function handleDatabaseSave(userData, callback) {
-  saveUserToDatabase(userData, function (saveResult) {
+  saveUserToDatabase(userData, (saveResult) => {
     if (!saveResult.success) {
       return callback({ success: false, error: "데이터베이스 저장 실패" });
     }
@@ -155,7 +155,7 @@ function handleDatabaseSave(userData, callback) {
 }
 
 function handleWelcomeEmail(email, userId, callback) {
-  sendWelcomeEmail(email, function (emailResult) {
+  sendWelcomeEmail(email, (emailResult) => {
     if (!emailResult.success) {
       return callback({ success: false, error: "환영 이메일 발송 실패" });
     }
@@ -175,8 +175,8 @@ function handleWelcomeEmail(email, userId, callback) {
  */
 
 function checkEmailDuplicatePromise(email) {
-  return new Promise(function (resolve, reject) {
-    setTimeout(function () {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
       var isDuplicate = email === "taken@example.com";
       if (isDuplicate) {
         reject(new Error("이미 존재하는 이메일입니다."));
@@ -188,16 +188,16 @@ function checkEmailDuplicatePromise(email) {
 }
 
 function encryptPasswordPromise(password) {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
+  return new Promise((resolve) => {
+    setTimeout(() => {
       resolve("encrypted_" + password);
     }, 300);
   });
 }
 
 function saveUserToDatabasePromise(userData) {
-  return new Promise(function (resolve, reject) {
-    setTimeout(function () {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
       if (Math.random() > 0.1) {
         // 90% 성공률
         resolve({
@@ -212,8 +212,8 @@ function saveUserToDatabasePromise(userData) {
 }
 
 function sendWelcomeEmailPromise(email) {
-  return new Promise(function (resolve, reject) {
-    setTimeout(function () {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
       console.log("환영 이메일을 " + email + "로 발송했습니다.");
       resolve({ emailSent: true });
     }, 400);
@@ -224,11 +224,11 @@ function processUserRegistrationWithPromise(userData) {
   console.log("\n=== Promise를 사용한 회원가입 처리 ===");
 
   return checkEmailDuplicatePromise(userData.email)
-    .then(function (result) {
+    .then((result) => {
       console.log("✅ 이메일 중복 검사 통과");
       return encryptPasswordPromise(userData.password);
     })
-    .then(function (encryptedPassword) {
+    .then((encryptedPassword) => {
       console.log("✅ 비밀번호 암호화 완료");
       return saveUserToDatabasePromise({
         email: userData.email,
@@ -236,15 +236,15 @@ function processUserRegistrationWithPromise(userData) {
         name: userData.name,
       });
     })
-    .then(function (saveResult) {
+    .then((saveResult) => {
       console.log(
         "✅ 데이터베이스 저장 완료 (사용자 ID: " + saveResult.userId + ")",
       );
-      return sendWelcomeEmailPromise(userData.email).then(function () {
+      return sendWelcomeEmailPromise(userData.email).then(() => {
         return saveResult; // 이전 결과를 다음으로 전달
       });
     })
-    .then(function (saveResult) {
+    .then((saveResult) => {
       console.log("✅ 환영 이메일 발송 완료");
       return {
         success: true,
@@ -252,7 +252,7 @@ function processUserRegistrationWithPromise(userData) {
         message: "회원가입이 완료되었습니다.",
       };
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log("❌ 회원가입 실패: " + error.message);
       return {
         success: false,
@@ -314,12 +314,11 @@ function processUserRegistrationWithPromise(userData) {
 
 var OrderProcessor = {
   processOrder: function (orderData, callback) {
-    var self = this;
     console.log("\n=== 주문 처리 시작 ===");
     console.log("주문 ID: " + orderData.orderId);
 
     // 1단계: 재고 확인
-    this.checkInventory(orderData.items, function (inventoryResult) {
+    this.checkInventory(orderData.items, (inventoryResult) => {
       if (!inventoryResult.available) {
         return callback({
           success: false,
@@ -328,7 +327,7 @@ var OrderProcessor = {
       }
 
       // 2단계: 결제 처리
-      self.processPayment(orderData.payment, function (paymentResult) {
+      this.processPayment(orderData.payment, (paymentResult) => {
         if (!paymentResult.success) {
           return callback({
             success: false,
@@ -337,10 +336,10 @@ var OrderProcessor = {
         }
 
         // 3단계: 재고 차감
-        self.deductInventory(orderData.items, function (deductResult) {
+        this.deductInventory(orderData.items, (deductResult) => {
           if (!deductResult.success) {
             // 결제 취소 필요
-            self.refundPayment(paymentResult.transactionId, function () {
+            this.refundPayment(paymentResult.transactionId, () => {
               callback({
                 success: false,
                 error: "재고 차감 실패, 결제가 취소되었습니다.",
@@ -350,7 +349,7 @@ var OrderProcessor = {
           }
 
           // 4단계: 배송 정보 생성
-          self.createShippingInfo(orderData, function (shippingResult) {
+          this.createShippingInfo(orderData, (shippingResult) => {
             if (!shippingResult.success) {
               callback({
                 success: false,
@@ -360,14 +359,14 @@ var OrderProcessor = {
             }
 
             // 5단계: 주문 완료 알림
-            self.sendOrderConfirmation(
+            this.sendOrderConfirmation(
               orderData.customerEmail,
               {
                 orderId: orderData.orderId,
                 transactionId: paymentResult.transactionId,
                 trackingNumber: shippingResult.trackingNumber,
               },
-              function (notificationResult) {
+              (notificationResult) => {
                 callback({
                   success: true,
                   orderId: orderData.orderId,
@@ -383,8 +382,8 @@ var OrderProcessor = {
     });
   },
 
-  checkInventory: function (items, callback) {
-    setTimeout(function () {
+  checkInventory: (items, callback) => {
+    setTimeout(() => {
       var unavailable = [];
       for (var i = 0; i < items.length; i++) {
         if (items[i].quantity > 10) {
@@ -400,8 +399,8 @@ var OrderProcessor = {
     }, 600);
   },
 
-  processPayment: function (paymentInfo, callback) {
-    setTimeout(function () {
+  processPayment: (paymentInfo, callback) => {
+    setTimeout(() => {
       var success = Math.random() > 0.1; // 90% 성공률
       if (success) {
         callback({
@@ -417,8 +416,8 @@ var OrderProcessor = {
     }, 1200);
   },
 
-  deductInventory: function (items, callback) {
-    setTimeout(function () {
+  deductInventory: (items, callback) => {
+    setTimeout(() => {
       console.log("재고 차감 완료:");
       for (var i = 0; i < items.length; i++) {
         console.log("- " + items[i].name + ": " + items[i].quantity + "개");
@@ -427,15 +426,15 @@ var OrderProcessor = {
     }, 400);
   },
 
-  refundPayment: function (transactionId, callback) {
-    setTimeout(function () {
+  refundPayment: (transactionId, callback) => {
+    setTimeout(() => {
       console.log("결제 취소 완료: " + transactionId);
       callback({ success: true });
     }, 800);
   },
 
-  createShippingInfo: function (orderData, callback) {
-    setTimeout(function () {
+  createShippingInfo: (orderData, callback) => {
+    setTimeout(() => {
       callback({
         success: true,
         trackingNumber: "TRACK_" + Date.now(),
@@ -443,8 +442,8 @@ var OrderProcessor = {
     }, 500);
   },
 
-  sendOrderConfirmation: function (email, orderInfo, callback) {
-    setTimeout(function () {
+  sendOrderConfirmation: (email, orderInfo, callback) => {
+    setTimeout(() => {
       console.log("주문 확인 이메일 발송됨: " + email);
       console.log("주문번호: " + orderInfo.orderId);
       console.log("결제ID: " + orderInfo.transactionId);
@@ -462,42 +461,37 @@ var OrderProcessorPromise = {
     console.log("\n=== Promise 기반 주문 처리 시작 ===");
     console.log("주문 ID: " + orderData.orderId);
 
-    var self = this;
-
     return this.checkInventoryPromise(orderData.items)
-      .then(function (inventoryResult) {
+      .then((inventoryResult) => {
         console.log("✅ 재고 확인 완료");
-        return self.processPaymentPromise(orderData.payment);
+        return this.processPaymentPromise(orderData.payment);
       })
-      .then(function (paymentResult) {
+      .then((paymentResult) => {
         console.log("✅ 결제 처리 완료: " + paymentResult.transactionId);
-        return self.deductInventoryPromise(orderData.items).then(function () {
+        return this.deductInventoryPromise(orderData.items).then(() => {
           return paymentResult; // 결제 정보를 다음 단계로 전달
         });
       })
-      .then(function (paymentResult) {
+      .then((paymentResult) => {
         console.log("✅ 재고 차감 완료");
-        return self
-          .createShippingInfoPromise(orderData)
-          .then(function (shippingResult) {
-            return { payment: paymentResult, shipping: shippingResult };
-          });
+        return this.createShippingInfoPromise(orderData).then(
+          (shippingResult) => ({
+            payment: paymentResult,
+            shipping: shippingResult,
+          }),
+        );
       })
-      .then(function (results) {
+      .then((results) => {
         console.log(
           "✅ 배송 정보 생성 완료: " + results.shipping.trackingNumber,
         );
-        return self
-          .sendOrderConfirmationPromise(orderData.customerEmail, {
-            orderId: orderData.orderId,
-            transactionId: results.payment.transactionId,
-            trackingNumber: results.shipping.trackingNumber,
-          })
-          .then(function () {
-            return results;
-          });
+        return this.sendOrderConfirmationPromise(orderData.customerEmail, {
+          orderId: orderData.orderId,
+          transactionId: results.payment.transactionId,
+          trackingNumber: results.shipping.trackingNumber,
+        }).then(() => results);
       })
-      .then(function (results) {
+      .then((results) => {
         console.log("✅ 주문 확인 이메일 발송 완료");
         return {
           success: true,
@@ -507,7 +501,7 @@ var OrderProcessorPromise = {
           message: "주문이 성공적으로 처리되었습니다.",
         };
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log("❌ 주문 처리 실패: " + error.message);
         return {
           success: false,
@@ -516,9 +510,9 @@ var OrderProcessorPromise = {
       });
   },
 
-  checkInventoryPromise: function (items) {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
+  checkInventoryPromise: (items) =>
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
         var unavailable = [];
         for (var i = 0; i < items.length; i++) {
           if (items[i].quantity > 10) {
@@ -532,12 +526,11 @@ var OrderProcessorPromise = {
           resolve({ available: true });
         }
       }, 600);
-    });
-  },
+    }),
 
-  processPaymentPromise: function (paymentInfo) {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
+  processPaymentPromise: (paymentInfo) =>
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
         var success = Math.random() > 0.1;
         if (success) {
           resolve({ transactionId: "TXN_" + Date.now() });
@@ -545,34 +538,30 @@ var OrderProcessorPromise = {
           reject(new Error("카드 결제 승인 실패"));
         }
       }, 1200);
-    });
-  },
+    }),
 
-  deductInventoryPromise: function (items) {
-    return new Promise(function (resolve) {
-      setTimeout(function () {
+  deductInventoryPromise: (items) =>
+    new Promise((resolve) => {
+      setTimeout(() => {
         console.log("재고 차감 처리중...");
         resolve({ success: true });
       }, 400);
-    });
-  },
+    }),
 
-  createShippingInfoPromise: function (orderData) {
-    return new Promise(function (resolve) {
-      setTimeout(function () {
+  createShippingInfoPromise: (orderData) =>
+    new Promise((resolve) => {
+      setTimeout(() => {
         resolve({ trackingNumber: "TRACK_" + Date.now() });
       }, 500);
-    });
-  },
+    }),
 
-  sendOrderConfirmationPromise: function (email, orderInfo) {
-    return new Promise(function (resolve) {
-      setTimeout(function () {
+  sendOrderConfirmationPromise: (email, orderInfo) =>
+    new Promise((resolve) => {
+      setTimeout(() => {
         console.log("주문 확인 이메일 발송 완료: " + email);
         resolve({ sent: true });
       }, 300);
-    });
-  },
+    }),
 };
 
 // 테스트 데이터
@@ -592,7 +581,7 @@ var sampleOrder = {
 
 // 실행 예시
 console.log("=== 콜백 기반 처리 ===");
-processUserRegistrationImproved(newUser, function (result) {
+processUserRegistrationImproved(newUser, (result) => {
   if (result.success) {
     console.log("✅ " + result.message);
   } else {
@@ -600,13 +589,13 @@ processUserRegistrationImproved(newUser, function (result) {
   }
 
   // Promise 기반 처리 실행
-  setTimeout(function () {
-    processUserRegistrationWithPromise(newUser).then(function (result) {
+  setTimeout(() => {
+    processUserRegistrationWithPromise(newUser).then((result) => {
       console.log("Promise 처리 완료:", result);
 
       // 주문 처리 예시 실행
-      setTimeout(function () {
-        OrderProcessorPromise.processOrder(sampleOrder).then(function (result) {
+      setTimeout(() => {
+        OrderProcessorPromise.processOrder(sampleOrder).then((result) => {
           console.log("주문 처리 결과:", result);
         });
       }, 1000);
