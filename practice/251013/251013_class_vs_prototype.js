@@ -50,20 +50,27 @@ class Vehicle {
 
 function VehicleProto(brand, model) {
   // 여기에 구현
+  this.brand = brand;
+  this.model = model
 }
 
 // 인스턴스 메서드
+VehicleProto.prototype.getInfo = function (){
+  return `${this.brand} ${this.model}`;
+}
 
 // Static 메서드
-
+VehicleProto.compare = function(v1, v2){
+  return v1.brand === v2.brand;
+}
 
 // 테스트
-// const car1 = new Vehicle('Tesla', 'Model 3');
-// const car2 = new VehicleProto('Tesla', 'Model 3');
-// console.log(car1.getInfo());
-// console.log(car2.getInfo());
-// console.log(Vehicle.compare(car1, car1));
-// console.log(VehicleProto.compare(car2, car2));
+const car1 = new Vehicle('Tesla', 'Model 3');
+const car2 = new VehicleProto('Tesla', 'Model 3');
+console.log(car1.getInfo());
+console.log(car2.getInfo());
+console.log(Vehicle.compare(car1, car1));
+console.log(VehicleProto.compare(car2, car2));
 
 
 // ============================================
@@ -110,27 +117,35 @@ class ElectricVehicle extends Vehicle {
 
 function ElectricVehicleProto(brand, model, batterySize) {
   // 여기에 구현
+  VehicleProto.call(this, brand, model); // 상속
+  this.batterySize = batterySize;
 }
 
 // 프로토타입 체인 연결
-
+ElectricVehicleProto.prototype = Object.create(VehicleProto.prototype)
+ElectricVehicleProto.prototype.constructor = ElectricVehicleProto;
 // getInfo 오버라이딩
-
+ElectricVehicleProto.prototype.getInfo = function(){
+  const parentInfo = VehicleProto.prototype.getInfo.call(this);
+  return `${parentInfo} with ${this.batterySize}kWh battery`;
+}
 // charge 메서드
-
+ElectricVehicleProto.prototype.charge = function(){
+  console.log(`Charging ${this.brand} ${this.model}...`);
+}
 
 // 테스트
-// const tesla1 = new ElectricVehicle('Tesla', 'Model S', 100);
-// const tesla2 = new ElectricVehicleProto('Tesla', 'Model S', 100);
-// console.log(tesla1.getInfo());
-// console.log(tesla2.getInfo());
+const tesla1 = new ElectricVehicle('Tesla', 'Model S', 100);
+const tesla2 = new ElectricVehicleProto('Tesla', 'Model S', 100);
+console.log(tesla1.getInfo());
+console.log(tesla2.getInfo());
 
 
 /*
  * 실험 과제:
- * 1. super()를 빼면 어떻게 될까?
- * 2. 프로토타입 체인 연결을 안 하면?
- * 3. getInfo에서 부모 메서드 호출을 안 하면?
+ * 1. super()를 빼면 어떻게 될까? -> 어디의 super를 말하는건지?
+ * 2. 프로토타입 체인 연결을 안 하면? -> 상속을 받지 않아 서로 다른 인스턴스가 된다.
+ * 3. getInfo에서 부모 메서드 호출을 안 하면? -> 그만큼 메모리 효율이 떨어질 것.
  * 
  * 각각 시도해보고 결과를 관찰하세요.
  */
@@ -222,22 +237,59 @@ class Square extends Rectangle {
 // Prototype 버전 구현
 function ShapeProto(color) {
   // 여기에 구현
+  this.color = color;
+  ShapeProto.count++;
+}
+
+ShapeProto.count = 0;
+
+ShapeProto.prototype.getColor = function () {
+  return this.color;
+}
+
+ShapeProto.getShapeCount = function(){
+  return ShapeProto.count;
 }
 
 function RectangleProto(color, width, height) {
   // 여기에 구현
+  ShapeProto.call(this, color);
+  this.width = width;
+  this.height = height;
+}
+
+RectangleProto.prototype = Object.create(ShapeProto.prototype);
+RectangleProto.prototype.constructor = RectangleProto;
+
+RectangleProto.prototype.getArea = function(){
+  return this.width * this.height;
 }
 
 function SquareProto(color, side) {
   // 여기에 구현
+  RectangleProto.call(this, color, side, side);
 }
 
+SquareProto.prototype = Object.create(RectangleProto.prototype);
+SquareProto.prototype.constructor = SquareProto;
+
+SquareProto.prototype.getPerimeter = function(){
+  return this.width * 4;
+}
+
+
 // 테스트
-// const square1 = new Square('red', 5);
-// const square2 = new SquareProto('red', 5);
-// console.log(square1.getArea());
-// console.log(square1.getPerimeter());
-// console.log(square1.getColor());
+const square1 = new Square('red', 5);
+const square2 = new SquareProto('red', 5);
+console.log(square1.getArea()); // 25
+console.log(square1.getPerimeter()); // 20
+console.log(square1.getColor()); // red
+
+console.log(square2.getArea()); // 25
+console.log(square2.getPerimeter()); // 20
+console.log(square2.getColor()); // red
+
+console.log(Shape.count === ShapeProto.count);
 
 
 // ============================================
@@ -329,11 +381,46 @@ class Dog extends Animal {
 
 // 여기에 구현
 
+function AnimalProto(name) {
+  this.name = name;
+}
+
+AnimalProto.prototype.speak = function(){
+  console.log(`${this.name} makes a sound`);
+}
+
+AnimalProto.create = function(name){
+  const newObj = Object.create(AnimalProto.prototype);
+  newObj.name = name;
+  return newObj;
+}
+
+function DogProto(name, breed){
+  AnimalProto.call(this, name);
+  this.breed = breed;
+}
+
+DogProto.prototype = Object.create(AnimalProto.prototype);
+DogProto.prototype.constructor = DogProto;
+
+DogProto.prototype.speak = function(){
+  console.log(`${this.name} barks`);
+}
+
+DogProto.prototype.fetch = function(){
+  console.log(`${this.name} fetches the ball`);
+}
+
+
 
 // 테스트
-// const dog1 = new Dog('Max', 'Golden Retriever');
-// const dogProto = new DogProto('Max', 'Golden Retriever');
-// dog1.speak();
-// dogProto.speak();
-// dog1.fetch();
-// dogProto.fetch();
+const dog1 = new Dog('Max', 'Golden Retriever');
+const dogProto = new DogProto('Max1', 'Golden Retriever1');
+dog1.speak();
+dogProto.speak();
+dog1.fetch();
+dogProto.fetch();
+
+console.log(dogProto instanceof DogProto); 
+console.log(dogProto instanceof AnimalProto);
+console.log(AnimalProto.create('Buddy') instanceof AnimalProto);
