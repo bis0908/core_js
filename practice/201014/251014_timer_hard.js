@@ -363,7 +363,7 @@ function DataFetcher(apiUrl) {
 
 // 버그가 있는 코드 (5곳 수정 필요)
 DataFetcher.prototype.fetch = function(endpoint) {
-  this.requestCount++;
+  // this.requestCount++; // 버그1: 위치 변경
   const cacheKey = endpoint;
   
   // 버그 1: 캐시 체크에서 this 문제
@@ -371,11 +371,13 @@ DataFetcher.prototype.fetch = function(endpoint) {
     console.log('Returning from cache');
     return Promise.resolve(this.cache[cacheKey]);
   }
+  this.requestCount++; // 버그1: 캐시 증가 로직의 위치를 변경
   
   console.log(`Fetching from API: ${this.apiUrl}${endpoint}`);
   
   // 버그 2: Promise 내부에서 this 접근
-  return new Promise(function(resolve) {
+  // return new Promise(function(resolve) { // 버그2: 익명 함수로 변경 수정
+  return new Promise((resolve) => {
     setTimeout(function() {
       const data = { endpoint: endpoint, timestamp: Date.now() };
       
@@ -383,27 +385,33 @@ DataFetcher.prototype.fetch = function(endpoint) {
       this.cache[cacheKey] = data;
       
       resolve(data);
-    }, 1000);
+    // }, 1000);
+    }.bind(this), 1000); // 버그3: 일반 함수 실행에 this를 바인딩 수정
   });
+
 };
 
 DataFetcher.prototype.fetchMultiple = function(endpoints) {
   // 버그 4: map 콜백에서 this.fetch 호출
   const promises = endpoints.map(function(endpoint) {
     return this.fetch(endpoint);
-  });
+  // });
+  }.bind(this)); // 일반 함수 실행에 this를 바인딩 수정
   
   return Promise.all(promises);
 };
 
 DataFetcher.prototype.getStats = function() {
+  // 버그 5: 로컬 변수 변환(클로저)
+  const requestCount = this.requestCount;
+  const cacheSize = Object.keys(this.cache).length;
+  
   return {
-    requestCount: this.requestCount,
-    cacheSize: Object.keys(this.cache).length,
-    
-    // 버그 5: 객체 메서드 내부의 this
-    showDetails: function() {
-      console.log(`Requests: ${this.requestCount}, Cache: ${this.cacheSize}`);
+    requestCount: requestCount,
+    cacheSize: cacheSize,
+    // 버그 5: 객체 내부의 this
+    showDetails: () => { // 버그 5: 익명 함수 변경 
+      console.log(`Requests: ${requestCount}, Cache: ${cacheSize}`);
     }
   };
 };
@@ -422,7 +430,7 @@ DataFetcher.prototype.getStats = function() {
  */
 
 // 테스트 코드 (수정 후 주석 해제)
-/*
+
 const fetcher = new DataFetcher('https://api.example.com');
 
 console.log('\n--- 단일 요청 ---');
@@ -446,7 +454,7 @@ fetcher.fetch('/users')
     console.log('Cache size:', stats.cacheSize);
     stats.showDetails();
   });
-*/
+
 
 // 예상 출력:
 // Fetching from API: https://api.example.com/users
