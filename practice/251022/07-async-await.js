@@ -73,6 +73,14 @@ Promise.resolve(10)
 
 console.log("\n변환 (async/await):");
 // 여기에 async 함수로 작성하세요
+async function todo1(){
+  const a = await Promise.resolve(10);
+  const b = a + 5;
+  return b * 2;
+}
+
+console.log(await todo1);
+
 
 console.log("\n==================================================\n");
 
@@ -85,6 +93,14 @@ Promise.reject('에러')
 
 console.log("\n변환 (try-catch):");
 // 여기에 try-catch로 작성하세요
+async function todo2() {
+  try {
+    await Promise.reject("error")
+  } catch (e) {
+    console.error(e)
+  }
+}
+await todo2();
 
 console.log("\n==================================================\n");
 
@@ -98,6 +114,22 @@ getUser()
 
 console.log("\n변환:");
 // async 함수로 작성
+async function getUser() {
+  return {id: 1, user: "albert"};
+}
+async function getPosts(id) {
+  return [{no:id, post: "abcdefghijklmn"}];
+}
+
+function printPosts(posts) {
+  posts.forEach(post => {
+    console.log(post);
+  });
+}
+
+const users = await getUser();
+const posts = await getPosts(users.id);
+printPosts(posts);
 
 console.log("\n==================================================\n");
 
@@ -110,6 +142,28 @@ Promise.all([task1(), task2(), task3()])
 
 console.log("\n변환:");
 // Promise.all과 await 조합
+function task1(ms) {
+  return new Promise(resolve => setTimeout(() => {
+    resolve("success1")
+  }, ms));
+};
+
+function task2(ms) {
+  return new Promise(resolve => setTimeout(() => {
+    resolve("success2")
+  }, ms));
+};
+
+function task3(ms) {
+  return new Promise(resolve => setTimeout(() => {
+    resolve("success3")
+  }, ms));
+};
+
+const result = await Promise.all([task1(500), task2(1000), task3(2000)]);
+console.log("🔥 / 07-async-await.js:164 / result:", result);
+
+
 
 console.log("\n==================================================\n");
 
@@ -121,6 +175,21 @@ fetchData()
   .catch(e => console.error(e))
   .finally(() => console.log('끝'));
 */
+async function fetchData() {
+  return new Promise(resolve => setTimeout(() => {
+    resolve("Done");
+  }, 500))
+};
+
+async function fetchWithError(params) {
+  try {
+    console.log( await fetchData());
+  } catch (error) {
+    console.error(error);
+  } finally {
+    console.log("End")
+  }
+};
 
 console.log("\n변환:");
 // try-catch-finally
@@ -133,23 +202,43 @@ console.log("\n==================================================\n");
 
 console.log("--- TODO 6: 역변환 1 ---\n");
 console.log("원본 (async/await):");
-/*
+
+/**
+ * step1, step2 헬퍼 함수
+ */
+function step1() {
+  return Promise.resolve(10);
+}
+function step2(a) {
+  return Promise.resolve(a * 2);
+}
+
 async function process() {
   const a = await step1();
   const b = await step2(a);
   return b;
 }
-*/
 
 console.log("\n변환 (then):");
-// then 체이닝으로 작성
+// 위의 async/await process() 함수를 then 체이닝으로 작성하세요
+Promise.resolve()
+.then((result) => step1())
+.then((result) =>  step2(result))
+.then(result => console.log(result));
 
 console.log("\n==================================================\n");
 
 console.log("--- TODO 7: 역변환 2 (에러) ---\n");
 console.log("원본:");
-/*
-async function fetchWithError() {
+
+/**
+ * fetch 헬퍼 함수
+ */
+function fetch() {
+  return Promise.reject("에러 발생");
+}
+
+async function fetchWithErrorHandling() {
   try {
     const data = await fetch();
     return data;
@@ -157,54 +246,97 @@ async function fetchWithError() {
     console.error(e);
   }
 }
-*/
 
 console.log("\n변환 (then/catch):");
+// 위의 async/await fetchWithErrorHandling() 함수를 then/catch로 작성하세요
+fetch().then(data).catch(e => console.log(e.message));
 
 console.log("\n==================================================\n");
 
 console.log("--- TODO 8: 역변환 3 (병렬) ---\n");
 console.log("원본:");
-/*
+
+/**
+ * task 헬퍼 함수 (숫자를 반환하는 Promise)
+ */
+function taskNum(n) {
+  return Promise.resolve(n);
+}
+
 async function parallel() {
   const [a, b, c] = await Promise.all([
-    task1(), task2(), task3()
+    taskNum(1), taskNum(2), taskNum(3)
   ]);
   return a + b + c;
 }
-*/
 
 console.log("\n변환:");
+// 위의 async/await parallel() 함수를 then으로 작성하세요
+Promise.all([taskNum(1), taskNum(2), taskNum(3)])
+.then(([a,b,c]) => 
+  console.log(a+b+c)
+);
 
 console.log("\n==================================================\n");
 
 /**
  * 실전 패턴: 순차 vs 병렬
+ *
+ * 독립적인 비동기 작업들을 처리할 때
+ * 순차 실행과 병렬 실행의 성능 차이를 비교
  */
 
 console.log("--- 실전: 순차 vs 병렬 ---\n");
 
-console.log("❌ 나쁜 예 (순차 - 느림):");
-/*
-async function slow() {
-  const a = await task1();  // 1초
-  const b = await task2();  // 1초
-  const c = await task3();  // 1초
-  // 총 3초
+// 시뮬레이션용 비동기 작업 (각각 1초 소요)
+function apiCall1() {
+  return new Promise(resolve => setTimeout(() => resolve("데이터A"), 1000));
 }
-*/
+function apiCall2() {
+  return new Promise(resolve => setTimeout(() => resolve("데이터B"), 1000));
+}
+function apiCall3() {
+  return new Promise(resolve => setTimeout(() => resolve("데이터C"), 1000));
+}
 
-console.log("\n✅ 좋은 예 (병렬 - 빠름):");
-/*
-async function fast() {
+// ❌ 나쁜 예: 순차 실행 (느림)
+async function slowPattern() {
+  console.log("❌ 순차 실행 시작...");
+  const start = Date.now();
+
+  const a = await apiCall1();  // 1초 대기
+  const b = await apiCall2();  // 1초 대기
+  const c = await apiCall3();  // 1초 대기
+
+  const elapsed = Date.now() - start;
+  console.log(`결과: [${a}, ${b}, ${c}]`);
+  console.log(`소요 시간: ${elapsed}ms (약 3초)\n`);
+}
+
+// ✅ 좋은 예: 병렬 실행 (빠름)
+async function fastPattern() {
+  console.log("✅ 병렬 실행 시작...");
+  const start = Date.now();
+
+  // 모든 작업을 동시에 시작
   const [a, b, c] = await Promise.all([
-    task1(), task2(), task3()
+    apiCall1(),
+    apiCall2(),
+    apiCall3()
   ]);
-  // 총 1초!
-}
-*/
 
-console.log("\n==================================================\n");
+  const elapsed = Date.now() - start;
+  console.log(`결과: [${a}, ${b}, ${c}]`);
+  console.log(`소요 시간: ${elapsed}ms (약 1초)\n`);
+}
+
+// 비교 실행
+setTimeout(async () => {
+  await slowPattern();
+  await fastPattern();
+  console.log("→ 병렬 실행이 3배 빠름! (1초 vs 3초)\n");
+  console.log("==================================================\n");
+}, 3000);
 
 /**
  * 학습 정리

@@ -50,17 +50,34 @@ console.log("--- TODO 1: 부분 성공 허용 ---\n");
 
 function fetchUsers() {
   // Promise.resolve({ data: "사용자 목록" })을 반환
+	return new Promise((resolve)=>{
+		resolve({data: "User Array List"})
+	})
 }
 
 function fetchPosts() {
   // Promise.reject(new Error("서버 오류"))를 반환
+	return new Promise((_, reject)=>{
+		reject(new Error("Server Error!"))
+	})
 }
 
 function fetchComments() {
   // Promise.resolve({ data: "댓글 목록" })을 반환
+	return new Promise(resolve => resolve({data: "Comment Array List"}))
 }
 
 // Promise.allSettled()로 모든 결과 수집
+Promise.allSettled([fetchUsers(), fetchPosts(), fetchComments()])
+.then(results => {
+	results.forEach((result, i)=>{
+		if (result.status === 'fulfilled') {
+			console.log(`success${i}: ${result.value.data}`)
+		} else {
+			console.error(result.reason.message);
+		}
+	})
+})
 
 
 console.log("(TODO 1을 완성하세요)\n");
@@ -69,9 +86,9 @@ console.log("==================================================\n");
 /**
  * Promise.any() (ES2021)
  *
- * - 가장 먼저 성공하는 Promise 반환
+ * - '가장 먼저 성공'하는 Promise 반환
  * - 실패는 무시
- * - 모두 실패하면 AggregateError
+ * - 모두 실패하면 AggregateError (다수의 오류가 한 오류로 포장되어야 할 때의 오류)
  */
 
 console.log("--- 예제 2: any() 기본 ---\n");
@@ -85,9 +102,7 @@ Promise.any([
 	console.log("→ 실패는 무시하고 첫 성공만\n");
 });
 
-setTimeout(() => {
-	console.log("==================================================\n");
-}, 500);
+console.log("==================================================\n");
 
 /**
  * TODO 2: 백업 서버 패턴
@@ -101,9 +116,26 @@ console.log("--- TODO 2: 백업 서버 ---\n");
 
 function tryServer(name, willSucceed, delay) {
   // willSucceed에 따라 resolve({ server: name, data: "데이터" }) 또는 reject(new Error(`${name} 실패`))
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			console.log(`  시도: ${name}`);
+			if (willSucceed) {
+				resolve({ server: name, data: "데이터" });
+			} else {
+				reject(new Error(`${name} 실패`));
+			}
+		}, delay);
+	});
 }
 
 // Promise.any()로 첫 번째 성공 서버 선택
+	Promise.any([
+		tryServer("주서버", false, 200),
+		tryServer("백업1", false, 400),
+		tryServer("백업2", true, 600),
+	]).then((result)=>{
+		console.log(result.server);
+	}).catch(error => console.log(error.message))
 
 
 console.log("(TODO 2를 완성하세요)\n");
@@ -118,21 +150,21 @@ console.log("==================================================\n");
 console.log("--- TODO 3: 4가지 메서드 비교 ---\n");
 
 console.log("Promise.all():");
+console.log("  - 조건: ?"); // 모든 promise 객체가 응답(resolve)이 와야 성공 and 호출은 동시에 일어나며 결과 배열의 순서는 입력 순서와 동일하게 보장됨. 하나라도 실패하면 실패로 처리.
+console.log("  - 결과: ?");
+console.log("  - 용도: ?\n"); // 호출 순서가 중요하지 않는 api 요청
+
+console.log("Promise.race():"); // 성공/실패 구분 없이 가장 빠른 promise 객체 리턴
 console.log("  - 조건: ?");
 console.log("  - 결과: ?");
 console.log("  - 용도: ?\n");
 
-console.log("Promise.race():");
+console.log("Promise.allSettled():"); // 모든 promise 객체를 수집
 console.log("  - 조건: ?");
 console.log("  - 결과: ?");
-console.log("  - 용도: ?\n");
+console.log("  - 용도: ?\n"); // 부분 성공 허용
 
-console.log("Promise.allSettled():");
-console.log("  - 조건: ?");
-console.log("  - 결과: ?");
-console.log("  - 용도: ?\n");
-
-console.log("Promise.any():");
+console.log("Promise.any():"); // 하나의 promise 결과가 성공하면 끝
 console.log("  - 조건: ?");
 console.log("  - 결과: ?");
 console.log("  - 용도: ?\n");

@@ -23,17 +23,23 @@ console.log("=== 실전 유틸리티 구현 ===\n");
 console.log("--- TODO 1: withTimeout 구현 ---\n");
 
 function withTimeout(promise, ms) {
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error("TimeOut Error!!!"));
+    }, ms);
+  });
   // Promise.race()를 사용하여 타임아웃 구현
+  return Promise.race([promise, timeoutPromise])
 }
 
 // 테스트
-// const slowTask = new Promise(resolve =>
-//   setTimeout(() => resolve("완료"), 2000)
-// );
+const slowTask = new Promise(resolve =>
+  setTimeout(() => resolve("완료"), 2000)
+);
 
-// withTimeout(slowTask, 1000)
-//   .then(result => console.log("✅ 성공:", result)) // slowTask가 "완료"를 resolve
-//   .catch(error => console.error("❌ 에러:", error.message));
+withTimeout(slowTask, 1000)
+  .then(result => console.log("✅ 성공:", result)) // slowTask가 "완료"를 resolve
+  .catch(error => console.error("❌ 에러:", error.message));
 
 console.log("(TODO 1을 완성하세요)\n");
 console.log("==================================================\n");
@@ -53,22 +59,31 @@ console.log("--- TODO 2: retry 구현 ---\n");
 
 async function retry(fn, maxAttempts = 3) {
   // for 루프와 try-catch를 사용하여 재시도 구현
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      console.error(error)
+      throw new Error("Failed");
+    }
+    
+  }
 }
 
-// 테스트 (70% 실패율)
-// function unstableTask() {
-//   return new Promise((resolve, reject) => {
-//     if (Math.random() > 0.7) {
-//       resolve("성공!"); // "성공!"을 resolve
-//     } else {
-//       reject(new Error("실패"));
-//     }
-//   });
-// }
+// 테스트
+function unstableTask() {
+  return new Promise((resolve, reject) => {
+    if (Math.random() > 0.4) { // 성공율 조정
+      resolve("성공!"); // "성공!"을 resolve
+    } else {
+      reject(new Error("실패"));
+    }
+  });
+}
 
-// retry(unstableTask, 5)
-//   .then(result => console.log("✅ 최종 성공:", result))
-//   .catch(error => console.error("❌ 최종 실패:", error.message));
+retry(unstableTask, 5)
+  .then(result => console.log("✅ 최종 성공:", result))
+  .catch(error => console.error("❌ 최종 실패:", error.message));
 
 console.log("(TODO 2를 완성하세요)\n");
 console.log("==================================================\n");
@@ -88,28 +103,34 @@ console.log("--- TODO 3: sequence 구현 ---\n");
 
 async function sequence(tasks) {
   // for...of 루프를 사용하여 순차 실행 구현
+  const result = [];
+  for (const task of tasks) {
+    result.push(await task());
+  }
+
+  return result;
 }
 
 // 테스트
-// function createTask(id, delay) {
-//   return () => new Promise(resolve => {
-//     setTimeout(() => {
-//       console.log(`  작업${id} 완료`);
-//       resolve(`결과${id}`); // `결과${id}`를 resolve
-//     }, delay);
-//   });
-// }
+function createTask(id, delay) {
+  return () => new Promise(resolve => {
+    setTimeout(() => {
+      console.log(`  작업${id} 완료`);
+      resolve(`결과${id}`); // `결과${id}`를 resolve
+    }, delay);
+  });
+}
 
-// const tasks = [
-//   createTask(1, 500),
-//   createTask(2, 300),
-//   createTask(3, 400)
-// ];
+const tasks = [
+  createTask(1, 500),
+  createTask(2, 300),
+  createTask(3, 400)
+];
 
-// sequence(tasks)
-//   .then(results => {
-//     console.log("✅ 모든 결과:", results);
-//   });
+sequence(tasks)
+  .then(results => {
+    console.log("✅ 모든 결과:", results);
+  });
 
 console.log("(TODO 3을 완성하세요)\n");
 console.log("==================================================\n");
@@ -121,22 +142,22 @@ console.log("==================================================\n");
 console.log("--- 보너스: 유틸리티 조합 ---\n");
 
 console.log("타임아웃 + 재시도 조합:");
-/*
+
 async function fetchWithRetry(url) {
   return retry(
     () => withTimeout(fetch(url), 3000),
     { maxRetries: 3 }
   );
 }
-*/
+
 
 console.log("\n순차 실행 + 타임아웃:");
-/*
-const tasks = urls.map(url => 
+
+const tasks2 = urls.map(url => 
   () => withTimeout(fetch(url), 5000)
 );
-const results = await sequence(tasks);
-*/
+const results = await sequence(tasks2);
+
 
 console.log("\n==================================================\n");
 
