@@ -47,49 +47,27 @@ Promise.resolve(1)
 
 	console.log("=== 예측 훈련 1: 기본 체이닝 ===\n");
 	console.log("아래 코드의 출력을 예측하세요:\n");
-	console.log("Promise.resolve(5)");
-	console.log("  .then(n => { console.log('A:', n); return n * 2; })");
-	console.log("  .then(n => { console.log('B:', n); return n + 3; })");
-	console.log("  .then(n => { console.log('C:', n); });\n");
 
-	console.log("예측: A, B, C의 값은?\n");
-	console.log("정답을 보려면 주석 해제:");
-	console.log("==================================================\n");
-
-	// Promise.resolve(5)
-	//   .then(n => { console.log('A:', n); return n * 2; })
-	//   .then(n => { console.log('B:', n); return n + 3; })
-	//   .then(n => { console.log('C:', n); });
+	Promise.resolve(5)
+	  .then(n => { console.log('A:', n); return n * 2; })
+	  .then(n => { console.log('B:', n); return n + 3; })
+	  .then(n => { console.log('C:', n); });
 
 	console.log("\n=== 예측 훈련 2: return 누락 ===\n");
-	console.log("Promise.resolve(10)");
-	console.log("  .then(n => { n + 5; })  // return 없음!");
-	console.log("  .then(n => { console.log('결과:', n); });\n");
 
-	console.log("예측: 결과는 15일까요, undefined일까요?\n");
-	console.log("정답을 보려면 주석 해제:");
-	console.log("==================================================\n");
 
-	// Promise.resolve(10)
-	//   .then(n => { n + 5; })
-	//   .then(n => { console.log('결과:', n); });
+	Promise.resolve(10)
+	  .then(n => { n + 5; })
+	  .then(n => { console.log('결과:', n); });
 
 	console.log("\n=== 예측 훈련 3: 에러 발생 ===\n");
-	console.log("Promise.resolve(1)");
-	console.log("  .then(n => { console.log('A:', n); return n + 1; })");
-	console.log("  .then(n => { console.log('B:', n); throw new Error('에러!'); })");
-	console.log("  .then(n => { console.log('C:', n); })");
-	console.log("  .catch(e => { console.log('에러:', e.message); });\n");
-
 	console.log("예측: A, B, C 중 어디까지 출력될까요?\n");
-	console.log("정답을 보려면 주석 해제:");
-	console.log("==================================================\n");
 
-	// Promise.resolve(1)
-	//   .then(n => { console.log('A:', n); return n + 1; })
-	//   .then(n => { console.log('B:', n); throw new Error('에러!'); })
-	//   .then(n => { console.log('C:', n); })
-	//   .catch(e => { console.log('에러:', e.message); });
+	Promise.resolve(1)
+	  .then(n => { console.log('A:', n); return n + 1; })
+	  .then(n => { console.log('B:', n); throw new Error('에러!'); })
+	  .then(n => { console.log('C:', n); })
+	  .catch(e => { console.log('에러:', e.message); });
 
 /**
  * TODO 1: 예측 훈련 4-10
@@ -99,93 +77,99 @@ Promise.resolve(1)
 
 	console.log("\n=== TODO 1: 예측 훈련 4 - Promise 반환 ===\n");
 	console.log("다음 코드를 작성하고 결과를 예측하세요:\n");
-	console.log("Promise.resolve(3)");
-	console.log("  .then(n => {");
-	console.log("    console.log('1:', n);");
-	console.log("    return new Promise(resolve => {");
-	console.log("      setTimeout(() => resolve(n * 10), 500);");
-	console.log("    });");
-	console.log("  })");
-	console.log("  .then(n => { console.log('2:', n); });\n");
-
-	console.log("예측: 1과 2는 동시에? 순차적으로? 값은?\n");
-	console.log("(여기에 코드를 작성하고 테스트하세요)\n");
+	
+	Promise.resolve(3)
+	  .then(n => {
+	    console.log('1:', n);
+	    return new Promise(resolve => {
+	      setTimeout(() => resolve(n * 10), 500);
+	    });
+	  })
+	  .then(n => { console.log('2:', n); });
+	
+	console.log("\n예측: 1과 2는 동시에? 순차적으로? 값은?\n"); // 순차적으로, 30
 	console.log("==================================================\n");
 
 	console.log("\n=== TODO 2: 예측 훈련 5 - 에러 복구 ===\n");
-	console.log("Promise.reject('초기 에러')");
-	console.log("  .catch(e => { console.log('에러1:', e); return '복구'; })");
-	console.log("  .then(v => { console.log('값:', v); throw new Error('에러2'); })");
-	console.log("  .catch(e => { console.log('에러2:', e.message); });\n");
-
-	console.log("(코드를 작성하고 예측하세요)\n");
+	
+	Promise.reject('초기 에러')
+	  .catch(e => { console.log('에러1:', e); return '복구'; })
+	  .then(v => { console.log('값:', v); throw new Error('에러2'); })
+	  .catch(e => { console.log('에러2:', e.message); });
+	
 	console.log("==================================================\n");
 
 	console.log("\n=== TODO 3: 예측 훈련 6 - finally 위치 ===\n");
-	console.log("Promise.resolve(100)");
-	console.log("  .then(n => { console.log('A:', n); return n / 2; })");
-	console.log("  .finally(() => { console.log('정리1'); })");
-	console.log("  .then(n => { console.log('B:', n); })");
-	console.log("  .finally(() => { console.log('정리2'); });\n");
-
-	console.log("(출력 순서를 예측하세요)\n");
+	
+	Promise.resolve(100)
+	  .then(n => { console.log('A:', n); return n / 2; })
+	  .finally(() => { console.log('정리1'); })
+	  .then(n => { console.log('B:', n); })
+	  .finally(() => { console.log('정리2'); });
+	
+	console.log("\n(출력 순서를 예측하세요)\n");
 	console.log("==================================================\n");
 
 	console.log("\n=== TODO 4: 예측 훈련 7 - 중첩 체이닝 ===\n");
-	console.log("Promise.resolve(1)");
-	console.log("  .then(n => {");
-	console.log("    console.log('외부:', n);");
-	console.log("    return Promise.resolve(n + 1)");
-	console.log("      .then(n2 => {");
-	console.log("        console.log('내부:', n2);");
-	console.log("        return n2 + 10;");
-	console.log("      });");
-	console.log("  })");
-	console.log("  .then(n => { console.log('최종:', n); });\n");
-
-	console.log("(실행 순서와 값을 예측하세요)\n");
+	
+	Promise.resolve(1)
+	  .then(n => {
+	    console.log('외부:', n);
+	    return Promise.resolve(n + 1)
+	      .then(n2 => {
+	        console.log('내부:', n2);
+	        return n2 + 10;
+	      });
+	  })
+	  .then(n => { console.log('최종:', n); });
+	
+	console.log("\n(실행 순서와 값을 예측하세요)\n");
 	console.log("==================================================\n");
 
 	console.log("\n=== TODO 5: 예측 훈련 8 - 동기 vs 비동기 ===\n");
-	console.log("console.log('1');");
-	console.log("Promise.resolve()");
-	console.log("  .then(() => console.log('2'))");
-	console.log("  .then(() => console.log('3'));");
-	console.log("console.log('4');\n");
-
-	console.log("(1, 2, 3, 4의 출력 순서는?)\n");
+	
+	
+	console.log('1');
+	Promise.resolve()
+	  .then(() => console.log('2'))
+	  .then(() => console.log('3'));
+	console.log('4');
+	
+	console.log("\n(1, 2, 3, 4의 출력 순서는?)\n"); // 1,4,2,3
 	console.log("==================================================\n");
 
 	console.log("\n=== TODO 6: 예측 훈련 9 - 복잡한 에러 흐름 ===\n");
-	console.log("Promise.resolve(1)");
-	console.log("  .then(n => { throw new Error('E1'); })");
-	console.log("  .catch(e => { console.log(e.message); return 2; })");
-	console.log("  .then(n => { console.log('값:', n); throw new Error('E2'); })");
-	console.log("  .then(n => { console.log('실행?', n); })");
-	console.log("  .catch(e => { console.log(e.message); });\n");
-
-	console.log("(어떤 메시지들이 어떤 순서로?)\n");
+	
+	Promise.resolve(1)
+	  .then(n => { throw new Error('E1'); }) // e1
+	  .catch(e => { console.log(e.message); return 2; }) // 2
+	  .then(n => { console.log('값:', n); throw new Error('E2'); }) // e2
+	  .then(n => { console.log('실행?', n); }) // skip
+	  .catch(e => { console.log(e.message); }); // e2
+	
+	console.log("\n(어떤 메시지들이 어떤 순서로?)\n");
 	console.log("==================================================\n");
 
 	console.log("\n=== TODO 7: 예측 훈련 10 - 종합 ===\n");
-	console.log("Promise.resolve(5)");
-	console.log("  .then(n => {");
-	console.log("    console.log('A:', n);");
-	console.log("    return new Promise(resolve => {");
-	console.log("      setTimeout(() => {");
-	console.log("        console.log('B:', n * 2);");
-	console.log("        resolve(n * 2);");
-	console.log("      }, 500);");
-	console.log("    });");
-	console.log("  })");
-	console.log("  .then(n => {");
-	console.log("    console.log('C:', n);");
-	console.log("    return n + 100;");
-	console.log("  })");
-	console.log("  .finally(() => console.log('끝'))");
-	console.log("  .then(n => console.log('최종:', n));\n");
-
-	console.log("(전체 흐름을 시간순으로 예측하세요)\n");
+	
+	Promise.resolve(5)
+	  .then(n => {
+	    console.log('A:', n); // 5
+	    return new Promise(resolve => {
+	      setTimeout(() => {
+	        console.log('B:', n * 2); // 10
+	        resolve(n * 2); // 10
+	      }, 500);
+	    });
+	  })
+	  .then(n => {
+	    console.log('C:', n); // 10
+	    return n + 100; // 110
+	  })
+	  .finally(() => console.log('끝'))
+	  .then(n => console.log('최종:', n)); // 110
+	
+	console.log("\n(전체 흐름을 시간순으로 예측하세요)\n");
 	console.log("==================================================\n");
 
 /**
@@ -230,3 +214,4 @@ Promise.resolve(1)
 	console.log("   - 부족하면 정답 파일 다시 학습하세요\n");
 	console.log("정답 확인: 04-promise-chaining-answer.js");
 	console.log("다음 단계: node 05-promise-all-race.js\n");
+

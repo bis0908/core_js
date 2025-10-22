@@ -17,10 +17,14 @@ console.log("=== Promise 종합 연습 ===\n");
  */
 
 console.log("--- 문제 1: 사용자 프로필 (기초) ---\n");
-console.log("함수를 구현하고 테스트하세요:\n");
-console.log("// function fetchUserProfile(userId) { ... }");
-console.log("// fetchUserProfile(1).then(...).catch(...);\n");
-console.log("==================================================\n");
+function fetchUserProfile(userId) {
+  // 1초 후 { id: userId, name: "사용자", email: "user@email.com" } 반환
+  // userId가 0 이하면 에러
+}
+
+// fetchUserProfile(1)... 
+
+console.log("\n==================================================\n");
 
 /**
  * 난이도: ⭐⭐ 중급
@@ -33,10 +37,16 @@ console.log("==================================================\n");
  */
 
 console.log("--- 문제 2: 대시보드 로딩 (중급) ---\n");
-console.log("병렬 로딩을 구현하세요:\n");
-console.log("// async function loadDashboard() { ... }");
-console.log("// loadDashboard().then(dashboard => ...);\n");
-console.log("==================================================\n");
+async function loadDashboard() {
+  // user: 500ms 후 { name: "홍길동" } resolve
+  // posts: 700ms 후 [{ title: "글1" }, { title: "글2" }] resolve
+  // notifications: 400ms 후 [{ msg: "알림1" }] resolve
+  // 3개 API를 Promise.all로 병렬 로딩하고, 총 소요 시간을 출력하세요.
+}
+
+// loadDashboard()...
+
+console.log("\n==================================================\n");
 
 /**
  * 난이도: ⭐⭐ 중급
@@ -46,17 +56,19 @@ console.log("==================================================\n");
  */
 
 console.log("--- 문제 3: 실행 순서 예측 (중급) ---\n");
-console.log('console.log("A");');
-console.log("");
-console.log("Promise.resolve()");
-console.log('  .then(() => console.log("B"))');
-console.log('  .then(() => console.log("C"));');
-console.log("");
-console.log('setTimeout(() => console.log("D"), 0);');
-console.log("");
-console.log('console.log("E");\n');
+/*
+console.log("A");
 
-console.log("예측: 출력 순서는? (종이에 적어보세요)");
+Promise.resolve()
+  .then(() => console.log("B"))
+  .then(() => console.log("C"));
+
+setTimeout(() => console.log("D"), 0);
+
+console.log("E");
+*/
+
+console.log("\n예측: 출력 순서는? (종이에 적어보세요)");
 console.log("정답 확인은 answer 파일에서!\n");
 console.log("==================================================\n");
 
@@ -72,9 +84,23 @@ console.log("==================================================\n");
  */
 
 console.log("--- 문제 4: 데이터 파이프라인 (고급) ---\n");
-console.log("4단계 파이프라인을 구현하세요:");
-console.log("fetch → validate → transform → save\n");
-console.log("==================================================\n");
+function fetchRawData() { 
+  // '{"value": 100}' 문자열을 resolve
+}
+function validateData(data) { 
+  // JSON.parse 후 value 속성이 없으면 reject
+}
+function transformData(data) { 
+  // { ...data, transformed: true, doubleValue: data.value * 2 } 객체를 resolve
+}
+function saveData(data) { 
+  // 500ms 후 resolve
+}
+
+// 4단계 파이프라인을 구현하세요:
+// fetch → validate → transform → save
+
+console.log("\n==================================================\n");
 
 /**
  * 난이도: ⭐⭐⭐ 고급
@@ -86,9 +112,11 @@ console.log("==================================================\n");
  */
 
 console.log("--- 문제 5: 재시도 + 타임아웃 (고급) ---\n");
-console.log("두 유틸리티를 조합하세요:");
-console.log("// withTimeout + retry\n");
-console.log("==================================================\n");
+function fetchWithRetryAndTimeout(url, timeout, maxRetries) {
+  // withTimeout + retry
+}
+
+console.log("\n==================================================\n");
 
 /**
  * 난이도: ⭐⭐⭐⭐ 최고급
@@ -100,13 +128,19 @@ console.log("==================================================\n");
  */
 
 console.log("--- 문제 6: Promise Pool (최고급) ---\n");
-console.log("동시 실행 제한 기능:");
-console.log("// class PromisePool {");
-console.log("//   constructor(concurrency) { ... }");
-console.log("//   add(promiseFn) { ... }");
-console.log("//   run() { ... }");
-console.log("// }\n");
-console.log("==================================================\n");
+class PromisePool {
+  constructor(concurrency) {
+    // ...
+  }
+  add(promiseFn) {
+    // ...
+  }
+  run() {
+    // ...
+  }
+}
+
+console.log("\n==================================================\n");
 
 /**
  * 자가 진단 체크리스트

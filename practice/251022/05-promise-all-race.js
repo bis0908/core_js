@@ -12,9 +12,9 @@ console.log("=== Promise.all() & race() 학습 ===\n");
 /**
  * Promise.all() - 모두 성공해야 성공
  *
- * - 모든 Promise가 fulfilled되면 성공
- * - 하나라도 rejected되면 즉시 실패
- * - 결과는 입력 순서대로 배열로 반환
+ * - '모든 Promise가 fulfilled'되면 성공
+ * - '하나라도 rejected되면' 즉시 실패
+ * - 결과는 '입력 순서대로' 배열로 반환
  */
 
 console.log("--- 예제 1: Promise.all() 기본 ---\n");
@@ -46,22 +46,48 @@ console.log("==================================================\n");
 console.log("--- TODO 1: 3개 API 병렬 호출 ---\n");
 
 // 여기에 함수 3개를 작성하세요
-// function fetchUser() {
-//   return new Promise(resolve => {
-//     setTimeout(() => resolve({ id: 1, name: "홍길동" }), 500);
-//   });
-// }
+function fetchUser() {
+  // 500ms 후에 { id: 1, name: "홍길동" } 객체를 resolve하는 Promise를 반환
+	return new Promise((resolve)=>{
+		setTimeout(() => {
+			resolve({id: 1, name: "홍킬동"});
+		}, 500);
+	});
+}
 
-// function fetchPosts() { ... }
-// function fetchComments() { ... }
+function fetchPosts() {
+  // 700ms 후에 [{ id: 1, title: "글1" }, { id: 2, title: "글2" }] 배열을 resolve하는 Promise를 반환
+	return new Promise((resolve)=>{
+		setTimeout(() => {
+			resolve([
+				{ id: 1, title: "글1" },
+				{ id: 2, title: "글2" }
+			]);
+		}, 700);
+	})
+}
+
+function fetchComments() {
+  // 400ms 후에 [{ id: 1, text: "댓글" }] 배열을 resolve하는 Promise를 반환
+	return new Promise((resolve)=>{
+		setTimeout(() => {
+			resolve([
+				{ id: 1, text: "comment1" },
+				{ id: 2, text: "comment2"},
+			])	;
+		}, 400);
+	})
+}
 
 // Promise.all()로 병렬 실행하고 결과 출력
-// Promise.all([fetchUser(), fetchPosts(), fetchComments()])
-//   .then(([user, posts, comments]) => {
-//     console.log("사용자:", user);
-//     console.log("게시글:", posts);
-//     console.log("댓글:", comments);
-//   });
+
+Promise.all(
+	[fetchUser(), fetchPosts(), fetchComments()]).then(([u,p,c])=>{
+		console.log(u);
+		console.log(p);
+		console.log(c);
+	})
+
 
 console.log("(TODO 1을 완성하세요)\n");
 console.log("==================================================\n");
@@ -83,13 +109,17 @@ console.log("==================================================\n");
 console.log("--- TODO 2: 하나라도 실패 ---\n");
 
 // 여기에 코드를 작성하세요
-// Promise.all([
-//   Promise.resolve("성공1"),
-//   Promise.reject(new Error("실패!")),
-//   Promise.resolve("성공2")
-// ])
-//   .then(results => console.log("✅ 성공:", results))
-//   .catch(error => console.error("❌ 실패:", error.message));
+const p1 = Promise.resolve("success1");
+const p2 = Promise.reject(new Error('fail!'));
+const p3 = Promise.resolve("success2");
+
+Promise.all([p1,p2,p3]).then(([r1,r2,r3])=>{
+	console.log(r1)
+	console.log(r2)
+	console.log(r3)
+}).catch((error) => {
+	console.error(error.message);
+});
 
 console.log("(TODO 2를 완성하세요)\n");
 console.log("==================================================\n");
@@ -135,23 +165,27 @@ setTimeout(() => {
 console.log("--- TODO 3: 타임아웃 구현 ---\n");
 
 // timeout 함수를 작성하세요
-// function timeout(ms) {
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => reject(new Error(`타임아웃 ${ms}ms`)), ms);
-//   });
-// }
+function timeout(ms) {
+	return new Promise((_, reject)=>{
+		setTimeout(() => {
+			reject(new Error("Error occurred!"))
+		}, ms);
+	})
+}
 
 // fetchData 함수를 작성하세요
-// function fetchData() {
-//   return new Promise(resolve => {
-//     setTimeout(() => resolve("데이터"), 2000);
-//   });
-// }
+function fetchData() {
+	return new Promise((resolve)=>{
+		setTimeout(() => {
+			resolve("Data is here~")
+		}, 2000);
+	})
+}
 
 // Promise.race로 타임아웃 적용
-// Promise.race([fetchData(), timeout(1000)])
-//   .then(data => console.log("✅ 성공:", data))
-//   .catch(error => console.error("❌ 에러:", error.message));
+Promise.race([timeout(), fetchData()])
+	.then(res => console.log(res))
+	.catch(err => console.error(err.message));
 
 console.log("(TODO 3을 완성하세요)\n");
 console.log("==================================================\n");
@@ -169,25 +203,24 @@ console.log("==================================================\n");
 
 console.log("--- TODO 4: 가장 빠른 서버 ---\n");
 
-// function fetchFromServer(name, delay) {
-//   return new Promise(resolve => {
-//     setTimeout(() => {
-//       console.log(`  ${name} 응답 완료`);
-//       resolve({ server: name, data: "응답" });
-//     }, delay);
-//   });
-// }
+function fetchFromServer(name, delay) {
+  return new Promise((resolve)=>{
+    setTimeout(() => {
+      resolve({server: name, response: 200});
+    }, delay);
+  })
+}
 
-// const servers = [
-//   fetchFromServer("서버A", 500),
-//   fetchFromServer("서버B", 300),
-//   fetchFromServer("서버C", 700)
-// ];
+const servers = [
+  fetchFromServer("Server A", 500),
+  fetchFromServer("Server B", 300),
+  fetchFromServer("Server C", 700),
+];
 
-// Promise.race(servers)
-//   .then(result => {
-//     console.log(`\n✅ 선택: ${result.server}`);
-//   });
+Promise.race(servers)
+  .then(result => {
+    console.log(`\n✅ 선택: ${result.server}`);
+  });
 
 console.log("(TODO 4를 완성하세요)\n");
 console.log("==================================================\n");

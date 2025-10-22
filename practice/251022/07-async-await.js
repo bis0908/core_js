@@ -64,58 +64,68 @@ setTimeout(async () => {
 
 console.log("--- TODO 1: 변환 1 ---\n");
 console.log("원본 (then):");
-console.log("Promise.resolve(10)");
-console.log("  .then(n => n + 5)");
-console.log("  .then(n => n * 2)");
-console.log("  .then(result => console.log(result));\n");
+/*
+Promise.resolve(10)
+  .then(n => n + 5)
+  .then(n => n * 2)
+  .then(result => console.log(result));
+*/
 
-console.log("변환 (async/await):");
-console.log("// 여기에 async 함수로 작성하세요\n");
+console.log("\n변환 (async/await):");
+// 여기에 async 함수로 작성하세요
 
-console.log("==================================================\n");
+console.log("\n==================================================\n");
 
 console.log("--- TODO 2: 변환 2 (에러 처리) ---\n");
 console.log("원본 (then):");
-console.log("Promise.reject('에러')");
-console.log("  .catch(e => console.error(e));\n");
+/*
+Promise.reject('에러')
+  .catch(e => console.error(e));
+*/
 
-console.log("변환 (try-catch):");
-console.log("// 여기에 try-catch로 작성하세요\n");
+console.log("\n변환 (try-catch):");
+// 여기에 try-catch로 작성하세요
 
-console.log("==================================================\n");
+console.log("\n==================================================\n");
 
 console.log("--- TODO 3: 변환 3 (순차 호출) ---\n");
 console.log("원본:");
-console.log("getUser()");
-console.log("  .then(user => getPosts(user.id))");
-console.log("  .then(posts => console.log(posts));\n");
+/*
+getUser()
+  .then(user => getPosts(user.id))
+  .then(posts => console.log(posts));
+*/
 
-console.log("변환:");
-console.log("// async 함수로 작성\n");
+console.log("\n변환:");
+// async 함수로 작성
 
-console.log("==================================================\n");
+console.log("\n==================================================\n");
 
 console.log("--- TODO 4: 변환 4 (병렬 실행) ---\n");
 console.log("원본:");
-console.log("Promise.all([task1(), task2(), task3()])");
-console.log("  .then(results => console.log(results));\n");
+/*
+Promise.all([task1(), task2(), task3()])
+  .then(results => console.log(results));
+*/
 
-console.log("변환:");
-console.log("// Promise.all과 await 조합\n");
+console.log("\n변환:");
+// Promise.all과 await 조합
 
-console.log("==================================================\n");
+console.log("\n==================================================\n");
 
 console.log("--- TODO 5: 변환 5 (finally) ---\n");
 console.log("원본:");
-console.log("fetchData()");
-console.log("  .then(data => console.log(data))");
-console.log("  .catch(e => console.error(e))");
-console.log("  .finally(() => console.log('끝'));\n");
+/*
+fetchData()
+  .then(data => console.log(data))
+  .catch(e => console.error(e))
+  .finally(() => console.log('끝'));
+*/
 
-console.log("변환:");
-console.log("// try-catch-finally\n");
+console.log("\n변환:");
+// try-catch-finally
 
-console.log("==================================================\n");
+console.log("\n==================================================\n");
 
 /**
  * TODO 6-10: async/await → then() 변환 (5회)
@@ -123,42 +133,50 @@ console.log("==================================================\n");
 
 console.log("--- TODO 6: 역변환 1 ---\n");
 console.log("원본 (async/await):");
-console.log("async function process() {");
-console.log("  const a = await step1();");
-console.log("  const b = await step2(a);");
-console.log("  return b;");
-console.log("}\n");
+/*
+async function process() {
+  const a = await step1();
+  const b = await step2(a);
+  return b;
+}
+*/
 
-console.log("변환 (then):");
-console.log("// then 체이닝으로 작성\n");
+console.log("\n변환 (then):");
+// then 체이닝으로 작성
 
-console.log("==================================================\n");
+console.log("\n==================================================\n");
 
 console.log("--- TODO 7: 역변환 2 (에러) ---\n");
 console.log("원본:");
-console.log("async function fetchWithError() {");
-console.log("  try {");
-console.log("    const data = await fetch();");
-console.log("    return data;");
-console.log("  } catch (e) {");
-console.log("    console.error(e);");
-console.log("  }");
-console.log("}\n");
+/*
+async function fetchWithError() {
+  try {
+    const data = await fetch();
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+}
+*/
 
-console.log("변환 (then/catch):\n");
-console.log("==================================================\n");
+console.log("\n변환 (then/catch):");
+
+console.log("\n==================================================\n");
 
 console.log("--- TODO 8: 역변환 3 (병렬) ---\n");
 console.log("원본:");
-console.log("async function parallel() {");
-console.log("  const [a, b, c] = await Promise.all([");
-console.log("    task1(), task2(), task3()");
-console.log("  ]);");
-console.log("  return a + b + c;");
-console.log("}\n");
+/*
+async function parallel() {
+  const [a, b, c] = await Promise.all([
+    task1(), task2(), task3()
+  ]);
+  return a + b + c;
+}
+*/
 
-console.log("변환:\n");
-console.log("==================================================\n");
+console.log("\n변환:");
+
+console.log("\n==================================================\n");
 
 /**
  * 실전 패턴: 순차 vs 병렬
@@ -167,22 +185,26 @@ console.log("==================================================\n");
 console.log("--- 실전: 순차 vs 병렬 ---\n");
 
 console.log("❌ 나쁜 예 (순차 - 느림):");
-console.log("async function slow() {");
-console.log("  const a = await task1();  // 1초");
-console.log("  const b = await task2();  // 1초");
-console.log("  const c = await task3();  // 1초");
-console.log("  // 총 3초");
-console.log("}\n");
+/*
+async function slow() {
+  const a = await task1();  // 1초
+  const b = await task2();  // 1초
+  const c = await task3();  // 1초
+  // 총 3초
+}
+*/
 
-console.log("✅ 좋은 예 (병렬 - 빠름):");
-console.log("async function fast() {");
-console.log("  const [a, b, c] = await Promise.all([");
-console.log("    task1(), task2(), task3()");
-console.log("  ]);");
-console.log("  // 총 1초!");
-console.log("}\n");
+console.log("\n✅ 좋은 예 (병렬 - 빠름):");
+/*
+async function fast() {
+  const [a, b, c] = await Promise.all([
+    task1(), task2(), task3()
+  ]);
+  // 총 1초!
+}
+*/
 
-console.log("==================================================\n");
+console.log("\n==================================================\n");
 
 /**
  * 학습 정리

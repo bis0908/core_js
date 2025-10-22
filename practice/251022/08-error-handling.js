@@ -37,17 +37,11 @@ console.log("==================================================\n");
 
 console.log("--- TODO 1: 에러 전파 ---\n");
 
-// function step1() { return Promise.resolve("1단계"); }
-// function step2() { return Promise.reject(new Error("2단계 실패")); }
-// function step3() { return Promise.resolve("3단계"); }
+function step1() { /* 1단계 resolve */ }
+function step2() { /* 2단계 reject */ }
+function step3() { /* 3단계 resolve */ }
 
-// step1()
-//   .then(r => { console.log(r); return step2(); })
-//   .then(r => { console.log(r); return step3(); })
-//   .then(r => { console.log(r); })
-//   .catch(error => {
-//     // 어느 단계에서든 에러 발생 시 여기서 처리
-//   });
+// step1, 2, 3을 체이닝하고 하나의 catch로 처리
 
 console.log("(TODO 1을 완성하세요)\n");
 console.log("==================================================\n");
@@ -65,14 +59,9 @@ console.log("==================================================\n");
 
 console.log("--- TODO 2: 에러 복구 ---\n");
 
-// Promise.reject("네트워크 에러")
-//   .catch(error => {
-//     console.log("에러 감지:", error);
-//     // "캐시 데이터" 반환으로 복구
-//   })
-//   .then(data => {
-//     console.log("데이터 사용:", data);
-//   });
+// Promise.reject()로 시작하여
+// catch에서 "캐시 데이터"를 반환하여 복구하고
+// then에서 복구된 데이터를 출력
 
 console.log("(TODO 2를 완성하세요)\n");
 console.log("==================================================\n");
@@ -88,19 +77,11 @@ console.log("==================================================\n");
 
 console.log("--- TODO 3: async/await 에러 ---\n");
 
-// async function process() {
-//   try {
-//     console.log("1단계");
-//     await Promise.resolve();
-//     console.log("2단계");
-//     throw new Error("2단계 에러!");
-//     console.log("3단계"); // 실행 안 됨
-//   } catch (error) {
-//     console.error("에러:", error.message);
-//   }
-// }
+async function process() {
+  // try-catch를 사용하여 2단계에서 에러 발생 및 처리
+}
 
-// process();
+process();
 
 console.log("(TODO 3을 완성하세요)\n");
 console.log("==================================================\n");

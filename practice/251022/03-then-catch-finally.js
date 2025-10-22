@@ -59,23 +59,27 @@ console.log("==================================================\n");
 console.log("--- TODO 1: then과 catch 함께 사용 ---\n");
 
 // 여기에 divideNumbers 함수를 작성하세요
-// function divideNumbers(a, b) {
-//   return new Promise((resolve, reject) => {
-//     // b가 0인지 검사
-//     // 0이면 reject, 아니면 resolve(a / b)
-//   });
-// }
+function divideNumbers(a, b) {
+  return new Promise((resolve, reject) => {
+    // b가 0인지 검사
+		// 0이면 reject, 아니면 resolve(a / b)
+		if (b === 0) {
+			return reject(new Error("0으로 나눌 수 없습니다"))
+		}
+		resolve(a/b);
+  });
+}
 
 // 테스트 코드 (함수 작성 후 주석 해제)
-// console.log("테스트 1: 10 / 2");
-// divideNumbers(10, 2)
-//   .then(result => console.log("✅ 결과:", result))
-//   .catch(error => console.error("❌ 에러:", error.message));
+console.log("테스트 1: 10 / 2");
+divideNumbers(10, 2)
+  .then(result => console.log("✅ 결과:", result))
+  .catch(error => console.error("❌ 에러:", error.message));
 
-// console.log("\n테스트 2: 10 / 0");
-// divideNumbers(10, 0)
-//   .then(result => console.log("✅ 결과:", result))
-//   .catch(error => console.error("❌ 에러:", error.message));
+console.log("\n테스트 2: 10 / 0");
+divideNumbers(10, 0)
+  .then(result => console.log("✅ 결과:", result))
+  .catch(error => console.error("❌ 에러:", error.message));
 
 console.log("(TODO 1을 완성하세요)\n");
 console.log("==================================================\n");
@@ -132,9 +136,8 @@ setTimeout(() => {
 		});
 }, 1500);
 
-setTimeout(() => {
-	console.log("==================================================\n");
-}, 3500);
+console.log("==================================================\n");
+
 
 /**
  * TODO 2: 로딩 인디케이터 구현
@@ -152,18 +155,34 @@ setTimeout(() => {
 console.log("--- TODO 2: 로딩 인디케이터 ---\n");
 
 // 여기에 fetchData 함수를 작성하세요
-// function fetchData(url, delay, willSucceed) {
-//   console.log(`🔄 로딩 중: ${url}`);
-//   return new Promise((resolve, reject) => {
-//     // delay 후 성공/실패 처리
-//   });
-// }
+function fetchData(url, delay, willSucceed) {
+  console.log(`🔄 로딩 중: ${url}`);
+  return new Promise((resolve, reject) => {
+    // delay 후 성공/실패 처리
+		setTimeout(() => {
+			if (willSucceed) {
+				return resolve("성공");
+			}
+			reject("실패");
+		}, delay);
+  });
+}
 
 // 테스트 코드 (함수 작성 후 주석 해제)
-// fetchData("/api/users", 1000, true)
-//   .then(data => console.log("  데이터:", data))
-//   .catch(error => console.error("  에러:", error.message))
-//   .finally(() => console.log("✅ 로딩 완료: /api/users\n"));
+fetchData("/api/users", 1000, true)
+  .then(data => console.log("  데이터:", data))
+  .catch(error => console.error("  에러:", error.message))
+  .finally(() => console.log("✅ 로딩 완료: /api/users\n"));
+
+setTimeout(() => {
+	fetchData("/api/posts", 1000, false)
+		.then((data) => console.log("  데이터:", data))
+		.catch((error) => console.error("  에러:", error.message))
+		.finally(() => {
+			console.log("✅ 로딩 완료: /api/posts");
+			console.log("→ finally는 성공/실패 무관하게 항상 실행\n");
+		});
+}, 500);
 
 console.log("(TODO 2를 완성하세요)\n");
 console.log("==================================================\n");
@@ -184,14 +203,16 @@ console.log("==================================================\n");
 console.log("--- TODO 3: then의 두 번째 인자 ---\n");
 
 // 여기에 코드를 작성하세요
-// Promise.reject("에러 발생").then(
-//   (result) => {
-//     // 성공 시 실행 (실행 안 됨)
-//   },
-//   (error) => {
-//     // 실패 시 실행
-//   }
-// );
+Promise.reject("에러 발생").then(
+  (result) => {
+    // 성공 시 실행 (실행 안 됨)
+		console.log(result)
+  },
+  (error) => {
+    // 실패 시 실행
+		console.error(error)
+  }
+);
 
 console.log("(TODO 3을 완성하세요)\n");
 console.log("==================================================\n");
@@ -210,16 +231,19 @@ console.log("==================================================\n");
 console.log("--- TODO 4: 메서드 체이닝 기초 ---\n");
 
 // 여기에 체이닝 코드를 작성하세요
-// Promise.resolve(5)
-//   .then(num => {
-//     // 10 더하기
-//   })
-//   .then(num => {
-//     // 2 곱하기
-//   })
-//   .then(result => {
-//     // 결과 출력
-//   });
+Promise.resolve(5)
+  .then(num => {
+    // 10 더하기
+		return num+=10;
+  })
+  .then(num => {
+    // 2 곱하기
+		return num *2;
+  })
+  .then(result => {
+    // 결과 출력
+		console.log(`결과: ${result}`)
+  });
 
 console.log("(TODO 4를 완성하세요)\n");
 console.log("==================================================\n");
@@ -238,14 +262,16 @@ console.log("==================================================\n");
 console.log("--- TODO 5: 에러 복구 ---\n");
 
 // 여기에 코드를 작성하세요
-// Promise.reject("초기 에러")
-//   .catch(error => {
-//     console.log("❌ 에러 발생:", error);
-//     // "복구된 값" 반환
-//   })
-//   .then(value => {
-//     // 복구된 값 출력
-//   });
+Promise.reject("초기 에러")
+  .catch(error => {
+    console.log("❌ 에러 발생:", error);
+    // "복구된 값" 반환
+		return "복구된 값";
+  })
+  .then(value => {
+    // 복구된 값 출력
+		console.log(`복구 값: ${value}`);
+  });
 
 console.log("(TODO 5를 완성하세요)\n");
 console.log("==================================================\n");

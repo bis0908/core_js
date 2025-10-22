@@ -48,26 +48,20 @@ console.log("==================================================\n");
 
 console.log("--- TODO 1: 부분 성공 허용 ---\n");
 
-// function fetchUsers() {
-//   return Promise.resolve({ data: "사용자 목록" });
-// }
+function fetchUsers() {
+  // Promise.resolve({ data: "사용자 목록" })을 반환
+}
 
-// function fetchPosts() {
-//   return Promise.reject(new Error("서버 오류"));
-// }
+function fetchPosts() {
+  // Promise.reject(new Error("서버 오류"))를 반환
+}
 
-// function fetchComments() {
-//   return Promise.resolve({ data: "댓글 목록" });
-// }
+function fetchComments() {
+  // Promise.resolve({ data: "댓글 목록" })을 반환
+}
 
-// Promise.allSettled([fetchUsers(), fetchPosts(), fetchComments()])
-//   .then(results => {
-//     const succeeded = results.filter(r => r.status === 'fulfilled');
-//     const failed = results.filter(r => r.status === 'rejected');
-//
-//     console.log(`✅ 성공: ${succeeded.length}개`);
-//     console.log(`❌ 실패: ${failed.length}개`);
-//   });
+// Promise.allSettled()로 모든 결과 수집
+
 
 console.log("(TODO 1을 완성하세요)\n");
 console.log("==================================================\n");
@@ -105,25 +99,12 @@ setTimeout(() => {
 
 console.log("--- TODO 2: 백업 서버 ---\n");
 
-// function tryServer(name, willSucceed, delay) {
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       if (willSucceed) {
-//         resolve({ server: name, data: "데이터" });
-//       } else {
-//         reject(new Error(`${name} 실패`));
-//       }
-//     }, delay);
-//   });
-// }
+function tryServer(name, willSucceed, delay) {
+  // willSucceed에 따라 resolve({ server: name, data: "데이터" }) 또는 reject(new Error(`${name} 실패`))
+}
 
-// Promise.any([
-//   tryServer("주서버", false, 200),
-//   tryServer("백업1", false, 400),
-//   tryServer("백업2", true, 600)
-// ])
-//   .then(result => console.log("✅ 연결:", result.server))
-//   .catch(error => console.error("❌ 모두 실패"));
+// Promise.any()로 첫 번째 성공 서버 선택
+
 
 console.log("(TODO 2를 완성하세요)\n");
 console.log("==================================================\n");

@@ -73,25 +73,34 @@ console.log("==================================================\n");
 console.log("--- TODO 1: 상태 전환 추적 함수 ---\n");
 
 // 여기에 fetchDataWithTracking 함수를 작성하세요
-// function fetchDataWithTracking(url, shouldSucceed, delay) {
-//   return new Promise((resolve, reject) => {
-//     // 로딩 시작 메시지
-//     // delay 후 성공/실패 처리
-//   });
-// }
+function fetchDataWithTracking(url, shouldSucceed, delay) {
+  return new Promise((resolve, reject) => {
+    // 로딩 시작 메시지
+		console.log(`데이터 로딩 시작: ${url}`);
+    // delay 후 성공/실패 처리
+		setTimeout(() => {
+			if (shouldSucceed) {
+				resolve({url, data: "응답 데이터"})
+			} else {
+				console.log(`데이터 로딩 실패 ${url}`)
+				reject(new Error("Network Error"));
+			}
+		}, delay);
+  });
+}
 
 // 테스트 코드 (함수 작성 후 주석 해제)
-// console.log("테스트 1: 성공 케이스");
-// fetchDataWithTracking("/api/users", true, 1000)
-//   .then(result => {
-//     console.log("✅ 응답:", result);
-//   })
-//   .catch(error => {
-//     console.error("❌ 에러:", error.message);
-//   })
-//   .finally(() => {
-//     console.log("🏁 요청 종료\n");
-//   });
+console.log("테스트 1: 성공 케이스");
+fetchDataWithTracking("/api/users", true, 1000)
+  .then(result => {
+    console.log("✅ 응답:", result);
+  })
+  .catch(error => {
+    console.error("❌ 에러:", error.message);
+  })
+  .finally(() => {
+    console.log("🏁 요청 종료\n");
+  });
 
 console.log("(TODO 1을 완성하세요)\n");
 console.log("==================================================\n");
@@ -111,20 +120,20 @@ console.log("==================================================\n");
 console.log("--- TODO 2: 상태 불변성 실험 ---\n");
 
 // 여기에 immutableStatePromise를 작성하세요
-// const immutableStatePromise = new Promise((resolve, reject) => {
-//   resolve("첫 번째 성공");
-//   resolve("두 번째 성공");
-//   reject(new Error("거부 시도"));
-// });
+const immutableStatePromise = new Promise((resolve, reject) => {
+  resolve("첫 번째 성공");
+  resolve("두 번째 성공");
+  reject(new Error("거부 시도"));
+});
 
-// immutableStatePromise
-//   .then(result => {
-//     console.log("✅ 결과:", result);
-//     console.log("→ 어떤 값이 출력되나요? 왜 그럴까요?");
-//   })
-//   .catch(error => {
-//     console.error("❌ 에러:", error.message);
-//   });
+immutableStatePromise
+  .then(result => {
+    console.log("✅ 결과:", result);
+    console.log("→ 어떤 값이 출력되나요? 왜 그럴까요?");
+  })
+  .catch(error => {
+    console.error("❌ 에러:", error.message);
+  });
 
 console.log("(TODO 2를 완성하세요)\n");
 console.log("==================================================\n");
@@ -146,22 +155,35 @@ console.log("==================================================\n");
 console.log("--- TODO 3: 조건부 상태 전환 ---\n");
 
 // 여기에 processNumber 함수를 작성하세요
-// function processNumber(num) {
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       // 조건에 따라 resolve 또는 reject
-//     }, 500);
-//   });
-// }
+function processNumber(num) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // 조건에 따라 resolve 또는 reject
+			switch (true) {
+				case num > 10:
+					resolve(`큰 수: ${num}`)
+					break;
+				case num > 0:
+					resolve(`작은 수: ${num}`)
+					break;
+				case num === 0:
+					reject(new Error("0은 처이할 수 없습니다"));
+				default:
+					reject(new Error("음수는 처리할 수 없습니다"))
+					break;
+			}
+    }, 500);
+  });
+}
 
 // 테스트 코드 (함수 작성 후 주석 해제)
-// const testNumbers = [15, 5, 0, -3];
+const testNumbers = [15, 5, 0, -3];
 
-// testNumbers.forEach(num => {
-//   processNumber(num)
-//     .then(result => console.log(`✅ ${num}:`, result))
-//     .catch(error => console.error(`❌ ${num}:`, error.message));
-// });
+testNumbers.forEach(num => {
+  processNumber(num)
+    .then(result => console.log(`✅ ${num}:`, result))
+    .catch(error => console.error(`❌ ${num}:`, error.message));
+});
 
 console.log("(TODO 3을 완성하세요)\n");
 console.log("==================================================\n");
@@ -175,42 +197,21 @@ console.log("==================================================\n");
 
 console.log("--- TODO 4: 실행 순서 예측 ---\n");
 
-console.log("코드:");
-console.log('console.log("1. 시작");');
-console.log("");
-console.log("const promise = new Promise((resolve) => {");
-console.log('  console.log("2. Promise 생성자");');
-console.log('  resolve("3. resolve 호출");');
-console.log("});");
-console.log("");
-console.log('console.log("4. Promise 생성 완료");');
-console.log("");
-console.log("promise.then((result) => {");
-console.log('  console.log("5. then 콜백:", result);');
-console.log("});");
-console.log("");
-console.log('console.log("6. 코드 끝");\n');
-
-console.log("질문: 1~6이 어떤 순서로 출력될까요?");
-console.log("예측한 순서를 종이에 적어보세요!\n");
-
-console.log("정답을 확인하려면 주석을 해제하세요:\n");
-
 // 주석을 해제하여 실행해보세요
-// console.log("1. 시작");
-//
-// const promise = new Promise((resolve) => {
-//   console.log("2. Promise 생성자");
-//   resolve("3. resolve 호출");
-// });
-//
-// console.log("4. Promise 생성 완료");
-//
-// promise.then((result) => {
-//   console.log("5. then 콜백:", result);
-// });
-//
-// console.log("6. 코드 끝");
+console.log("1. 시작");
+
+const promise = new Promise((resolve) => {
+  console.log("2. Promise 생성자");
+  resolve("3. resolve 호출");
+});
+
+console.log("4. Promise 생성 완료");
+
+promise.then((result) => {
+  console.log("5. then 콜백:", result);
+});
+
+console.log("6. 코드 끝");
 
 console.log("==================================================\n");
 
